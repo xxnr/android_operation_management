@@ -1,7 +1,8 @@
 package com.xxnr.operation.protocol;
 
 
-import com.xxnr.operation.protocol.beans.NewsListResult;
+import com.xxnr.operation.protocol.bean.GetPublicKeyResult;
+import com.xxnr.operation.protocol.bean.LoginResult;
 
 /**
  * API 请求的类型
@@ -9,9 +10,8 @@ import com.xxnr.operation.protocol.beans.NewsListResult;
  * @author wqz
  */
 public enum ApiType {
-    //资讯列表
-    NEWS("/api/v2.0/news", NewsListResult.class),
-
+    GET_PUBLIC_KEY("api/v2.0/user/getpubkey/", GetPublicKeyResult.class),
+    LOGIN("$manager/api/login/", LoginResult.class),
     TEST("", ResponseResult.class);
 
     private static String server_url = "http://api.xinxinnongren.com";

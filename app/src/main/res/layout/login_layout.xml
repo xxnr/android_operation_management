@@ -1,7 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical">
 
-    <include layout="@layout/title_lay"/>
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="100dp"
+       android:gravity="center_horizontal"
+       android:paddingLeft="@dimen/common_margin"
+       android:paddingRight="@dimen/common_margin"
+       android:orientation="vertical"
+       >
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/newfarmer_operation"
+           android:textSize="24sp"
+           android:textColor="@color/green"
+           />
+       <LinearLayout
+           android:layout_marginTop="20dp"
+           android:layout_width="match_parent"
+           android:layout_height="120dp"
+           android:orientation="vertical"
+           android:background="@drawable/write_corners_bg">
+
+
+               <EditText
+                   android:maxLength="11"
+                   android:inputType="number"
+                   android:id="@+id/login_name_et"
+                   android:gravity="center_vertical"
+                   android:hint="@string/login_user_name"
+                   android:layout_weight="1"
+                   android:layout_marginLeft="@dimen/common_margin_10"
+                   android:layout_width="match_parent"
+                   android:layout_height="0dp"
+                   android:textColor="@color/french_gray"
+                   android:background="@null"
+
+                   />
+
+           <include layout="@layout/line_lay"/>
+           <EditText
+               android:id="@+id/login_pass_et"
+               android:gravity="center_vertical"
+               android:hint="@string/login_password"
+               android:layout_weight="1"
+               android:layout_marginLeft="@dimen/common_margin_10"
+               android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:textColor="@color/french_gray"
+               android:background="@null"/>
+
+       </LinearLayout>
+
+       <TextView
+           android:id="@+id/login_sure_bt"
+           android:text="@string/login_button_name"
+           android:gravity="center"
+           android:textColor="@color/white"
+           android:layout_marginTop="15dp"
+           android:background="@drawable/selector_green_lightgreen"
+           android:layout_width="match_parent"
+           android:layout_height="35dp" />
+
+   </LinearLayout>
 </LinearLayout>

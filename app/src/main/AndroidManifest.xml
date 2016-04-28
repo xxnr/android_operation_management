@@ -23,6 +23,10 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask" />
+        <!--主页-->
+        <activity
+            android:name=".activity.LoginActivity"
+           />
 
     </application>
 

@@ -23,4 +23,10 @@
     <color name="list_bg">#f8f8f8</color>
     <!-- 灰色 -->
     <color name="gray">#c7c7c7</color>
+    <!--文字颜色浅灰-->
+    <color name="french_gray">#909090</color>
+    <!--浅绿色-->
+    <color name="light_green">#00FFC3</color>
+
+
 </resources>
