@@ -2,7 +2,6 @@
 *.iml
 .gradle
 build
-*gradle/
 gen
 app/build
 *.log
