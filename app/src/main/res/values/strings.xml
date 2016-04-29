@@ -4,4 +4,8 @@
     <string name="login_button_name">登录</string>
     <string name="login_user_name">用户名</string>
     <string name="login_password">密码</string>
+    <string name="login_out">退出登录</string>
+    <string name="customer_manage">客户管理</string>
+    <string name="potential_customer">潜在客户</string>
+    <string name="order_manage">订单管理</string>
 </resources>

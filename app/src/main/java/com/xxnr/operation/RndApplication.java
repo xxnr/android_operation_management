@@ -3,6 +3,7 @@ package com.xxnr.operation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.xxnr.operation.developTools.app.App;
@@ -23,6 +24,7 @@ public class RndApplication extends Application {
 
     // login user name
     private String uid = "";
+    private String token = "";
     private String pwd = "";
 
 
@@ -79,10 +81,20 @@ public class RndApplication extends Application {
         this.uid = uid;
     }
 
+
     public String getUid() {
 
         return uid;
     }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
 
     public void setPwd(String pwd) {
         this.pwd = pwd;

@@ -10,11 +10,18 @@ import com.xxnr.operation.protocol.bean.LoginResult;
  * @author wqz
  */
 public enum ApiType {
-    GET_PUBLIC_KEY("api/v2.0/user/getpubkey/", GetPublicKeyResult.class),
-    LOGIN("$manager/api/login/", LoginResult.class),
+    /**
+     * 获取公钥
+     */
+    GET_PUBLIC_KEY("/api/v2.0/user/getpubkey", GetPublicKeyResult.class),
+    /**
+     * 用户登陆
+     */
+    LOGIN("/$manager/api/login", LoginResult.class),
+
     TEST("", ResponseResult.class);
 
-    private static String server_url = "http://api.xinxinnongren.com";
+    private static String server_url = "http://101.200.194.203";
 
 
     public static final String url = server_url + "/";

@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
+import com.xxnr.operation.protocol.bean.LoginResult;
 
 import java.util.List;
 
@@ -53,6 +54,13 @@ public class XUtilsDbHelper {
         dbUtils = DbUtils.create(config);
         dbUtils.configAllowTransaction(true);
         dbUtils.configDebug(false);
+
+
+        try {
+            dbUtils.createTableIfNotExist(LoginResult.DatasBean.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
 
 
     }
