@@ -8,4 +8,6 @@
     <string name="customer_manage">客户管理</string>
     <string name="potential_customer">潜在客户</string>
     <string name="order_manage">订单管理</string>
+    <string name="loading">正在加载…</string>
+    <string name="amounts">合计：</string>
 </resources>

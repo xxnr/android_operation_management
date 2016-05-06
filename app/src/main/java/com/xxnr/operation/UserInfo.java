@@ -48,7 +48,7 @@ public class UserInfo {
     //获取用户信息
 
     public static LoginResult.DatasBean getUserInfo(Context context) {
-        DbUtils dbUtils = XUtilsDbHelper.getInstance(context, App.getApp().getUid());
+        DbUtils dbUtils = XUtilsDbHelper.getInstance(context, getUid(context));
         try {
             return dbUtils.findById(LoginResult.DatasBean.class, getUid(context));
         } catch (DbException e) {
@@ -60,9 +60,9 @@ public class UserInfo {
     //保存用户信息
 
     public static void saveUserInfo(LoginResult.DatasBean datasBean, Context context) {
-        DbUtils dbUtils = XUtilsDbHelper.getInstance(context, App.getApp().getUid());
+        DbUtils dbUtils = XUtilsDbHelper.getInstance(context, getUid(context));
         try {
-            dbUtils.save(datasBean);
+            dbUtils.saveOrUpdate(datasBean);
         } catch (DbException e) {
             e.printStackTrace();
         }

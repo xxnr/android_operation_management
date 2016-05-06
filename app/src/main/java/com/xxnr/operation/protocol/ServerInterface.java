@@ -101,6 +101,8 @@ public final class ServerInterface {
                 return mHelper.performGet(api.getOpt(), params);
             } else if (api.getRequestMethod() == ApiType.RequestMethod.POSTJSON) {
                 return mHelper.postBody(api.getOpt(), params);
+            } else if (api.getRequestMethod() == ApiType.RequestMethod.PUT) {
+                return mHelper.putBody(api.getOpt(), params);
             } else {
                 return mHelper.performPost(api.getOpt(), params);
             }

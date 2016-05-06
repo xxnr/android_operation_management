@@ -7,6 +7,8 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.xxnr.operation.developTools.app.App;
+import com.xxnr.operation.utils.CrashHandler;
+import com.xxnr.operation.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,17 @@ public class RndApplication extends Application {
         applicationContext = this;
         instance = this;
         App.setApp(this);
+        //初始化CrashHandler
+        CrashHandler.getInstance().init(this);
+        //初始化全局的uid token
+        String uid = UserInfo.getUid(this);
+        if (StringUtil.checkStr(uid)){
+            setUid(uid);
+        }
+        String token = UserInfo.getToken(this);
+        if (StringUtil.checkStr(token)){
+            setToken(token);
+        }
     }
 
 

@@ -42,6 +42,7 @@ public class NetworkHelper {
                 RndLog.d(TAG, key + " = " + urlParams.get(key));
             }
             String subUrl = urlBuilder.substring(0, urlBuilder.length() - 1);
+            RndLog.d(TAG, "performGet. Data=" + subUrl);
 
             //创建一个Request
             final Request request = new Request.Builder()
@@ -103,6 +104,28 @@ public class NetworkHelper {
                 Request request = new Request.Builder()
                         .url(url)
                         .post(requestBody)
+                        .build();
+                return getInstance().newCall(request).execute();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * put
+     */
+    public Response putBody(String url, HashMap<String, String> urlParams) throws IOException {
+        RndLog.d(TAG, "postBody. url=" + url);
+
+        if (urlParams != null && !urlParams.isEmpty()) {
+            String value = urlParams.get("PUT");
+            RndLog.d(TAG, "postBody. parameter[" + value + "]");
+            //如果value 为空 new StringEntity的时候会报错
+            if (StringUtil.checkStr(value)) {
+                RequestBody requestBody = RequestBody.create(JSON, value);
+                Request request = new Request.Builder()
+                        .url(url)
+                        .put(requestBody)
                         .build();
                 return getInstance().newCall(request).execute();
             }
