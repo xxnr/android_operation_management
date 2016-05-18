@@ -36,6 +36,22 @@
 
 
             <Button
+                android:id="@+id/change_pay_type"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:layout_toLeftOf="@+id/go_to_pay"
+                android:background="@drawable/selector_change_pay_type"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="发货到服务站"
+                android:textColor="@color/white_orange_text_selector"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+
+            <Button
                 android:id="@+id/go_to_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -56,9 +72,9 @@
 
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/pop_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/pop_bg" />
+        android:background="@color/pop_bg"
+        android:visibility="gone" />
 </RelativeLayout>

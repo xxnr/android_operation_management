@@ -169,3 +169,4 @@
     -keep class com.squareup.picasso.** { *;}
      #Xutils
     -keep class com.lidroid.** { *; }
+

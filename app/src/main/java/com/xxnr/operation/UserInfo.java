@@ -1,7 +1,9 @@
 package com.xxnr.operation;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -84,4 +86,12 @@ public class UserInfo {
         App.getApp().setToken("");
 
     }
+    // 调用此方法 去登录页面
+    public static void tokenToLogin(Activity activity) {
+        UserInfo.clearUserInfo(activity);
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+    }
+
 }

@@ -16,6 +16,7 @@ import com.xxnr.operation.protocol.bean.OrderDetailResult;
 import com.xxnr.operation.utils.DateFormatUtils;
 import com.xxnr.operation.utils.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,8 +77,25 @@ public class OrderPayDetailActivity extends BaseActivity {
                     //已支付金额
                     order_yet_tv.setText("¥" + StringUtil.toTwoString(subOrder.paidPrice + ""));
 
-                    PayInfoAdapter payInfoAdapter = new PayInfoAdapter(OrderPayDetailActivity.this, subOrder.payments);
-                    listView.setAdapter(payInfoAdapter);
+                    List<OrderDetailResult.DatasBean.SubOrdersBean.PaymentsBean> payments = subOrder.payments;
+                    List<OrderDetailResult.DatasBean.SubOrdersBean.PaymentsBean> payments1 = new ArrayList<>();
+
+                    if (payments != null && !payments.isEmpty()) {
+                        for (int i = 0; i < payments.size(); i++) {
+                            OrderDetailResult.DatasBean.SubOrdersBean.PaymentsBean bean = payments.get(i);
+                            if (bean != null) {
+                                if (bean.payStatus == 2) {
+                                    payments1.add(bean);
+                                }
+                            }
+                        }
+
+                    }
+                    if (!payments1.isEmpty()) {
+                        PayInfoAdapter payInfoAdapter = new PayInfoAdapter(OrderPayDetailActivity.this, payments1);
+                        listView.setAdapter(payInfoAdapter);
+                    }
+
                 }
             }
 
@@ -132,7 +150,7 @@ public class OrderPayDetailActivity extends BaseActivity {
                 }
                 //支付金额
                 if (StringUtil.checkStr(payments.price + "")) {
-                    holder.setText(R.id.pay_price, "¥" + payments.price);
+                    holder.setText(R.id.pay_price, "¥" + StringUtil.toTwoString(payments.price + ""));
                 }
                 //支付时间
                 if (StringUtil.checkStr(payments.datePaid)) {
@@ -140,7 +158,7 @@ public class OrderPayDetailActivity extends BaseActivity {
                 }
                 //支付结果
                 if (payments.payStatus == 1) {
-                    holder.getView(R.id.item_payInfo_times).setVisibility(View.GONE);
+                    holder.setText(R.id.item_payInfo_state, "");
                 } else if (payments.payStatus == 2) {
                     holder.setText(R.id.item_payInfo_state, "支付成功");
                 }
@@ -155,7 +173,7 @@ public class OrderPayDetailActivity extends BaseActivity {
                 if (StringUtil.checkStr(payments.RSCCompanyName)) {
                     order_pay_state_ll.setVisibility(View.VISIBLE);
                     holder.setText(R.id.order_pay_state, payments.RSCCompanyName);
-                }else {
+                } else {
                     order_pay_state_ll.setVisibility(View.GONE);
                 }
 

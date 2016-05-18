@@ -7,20 +7,18 @@
     <include layout="@layout/title_lay" />
 
 
-    <com.xxnr.operation.widget.CustomSwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:divider="@color/default_act_bg"
+        android:dividerHeight="10dp"
+        android:listSelector="@drawable/list_bg_selector"
+        ptr:ptrAnimationStyle="rotate"
+        ptr:ptrDrawable="@mipmap/loader"
+        ptr:ptrHeaderBackground="@color/re_flash"
+        ptr:ptrListViewExtrasEnabled="false"
+        ptr:ptrScrollingWhileRefreshingEnabled="true" />
 
 
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/default_act_bg"
-            android:dividerHeight="10dp"
-            android:listSelector="@drawable/list_bg_selector" />
-
-
-    </com.xxnr.operation.widget.CustomSwipeRefreshLayout>
 </LinearLayout>

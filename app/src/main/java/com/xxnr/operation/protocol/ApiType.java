@@ -26,12 +26,12 @@ public enum ApiType {
     /**
      * 用户登陆
      */
-    LOGIN("/$manager/api/login", LoginResult.class),
+    LOGIN("/manager/api/login", LoginResult.class),
 
     /**
      * 客户管理列表
      */
-    GET_USERS_LIST("/$manager/api/users", CustomerListResult.class),
+    GET_USERS_LIST("/manager/api/users", CustomerListResult.class),
 
 
     /**
@@ -47,12 +47,12 @@ public enum ApiType {
     /**
      * 修改客户信息
      */
-    CHANGE_USER("/$manager/api/users", ResponseResult.class),
+    CHANGE_USER("/manager/api/users", ResponseResult.class),
 
     /**
      * 潜在客户列表
      */
-    GET_POTENTIAL_LIST("/$manager/api/v2.1/potentialCustomer/query", PotentialListResult.class),
+    GET_POTENTIAL_LIST("/manager/api/v2.1/potentialCustomer/query", PotentialListResult.class),
 
     /**
      * 潜在客户详情
@@ -61,7 +61,7 @@ public enum ApiType {
     /**
      * 订单列表
      */
-    GET_ORDER_LIST("/$manager/api/orders", OrderListResult.class),
+    GET_ORDER_LIST("/manager/api/orders", OrderListResult.class),
     /**
      * 订单详情
      */
@@ -70,12 +70,20 @@ public enum ApiType {
     /**
      * 线下付款方式
      */
-    GET_OFFLINE_PAY_TYPE("/$manager/api/order/getOfflinePayType", OfflinePayTypeResult.class),
+    GET_OFFLINE_PAY_TYPE("/manager/api/getOfflinePayType", OfflinePayTypeResult.class),
 
     /**
      * 线下支付网点
      */
-    GET_OFFLINE_STATE_LIST("/$manager/api/v2.2/RSCs", OfflineStateListResult.class),
+    GET_OFFLINE_STATE_LIST("/manager/api/v2.2/RSCs", OfflineStateListResult.class),
+    /**
+     * 审核付款
+     */
+    CONFIRM_OFFLINE_PAY("/manager/api/orders/confirmOfflinePay", ResponseResult.class),
+    /**
+     * 发货到服务站
+     */
+    SKUS_DELIVERY("/manager/api/orders/SKUsDelivery", ResponseResult.class),
 
 
     TEST("", ResponseResult.class);
@@ -83,7 +91,7 @@ public enum ApiType {
     private static String server_url = "http://101.200.194.203";
 
 
-    public static final String url = server_url + "/";
+    public static final String url = server_url;
     private String opt;
     private Class<? extends ResponseResult> clazz;
     private RequestMethod requestMethod = RequestMethod.POST;

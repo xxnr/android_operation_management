@@ -31,12 +31,16 @@ public class OrderListAdapter extends CommonAdapter<OrderListResult.DatasBean.It
     private static final String TAG = OrderListAdapter.class.getSimpleName();
     private Context context;
     private ItemOnClickListener mItemOnClickListener;
+    private ItemOnClickListener1 mItemOnClickListener1;
+    private int tag = 0;//当前是哪个列表
 
 
-    public OrderListAdapter(Context context, List<OrderListResult.DatasBean.ItemsBean> data,ItemOnClickListener listener) {
+    public OrderListAdapter(Context context, List<OrderListResult.DatasBean.ItemsBean> data, ItemOnClickListener listener, ItemOnClickListener1 listener1, int tag) {
         super(context, data, R.layout.item_order_list);
         this.context = context;
-        this.mItemOnClickListener=listener;
+        this.mItemOnClickListener = listener;
+        this.mItemOnClickListener1 = listener1;
+        this.tag = tag;
     }
 
     @Override
@@ -84,41 +88,42 @@ public class OrderListAdapter extends CommonAdapter<OrderListResult.DatasBean.It
                     go_to_pay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            RndLog.d(TAG,"setOnClickListener-->onClick...");
+                            RndLog.d(TAG, "setOnClickListener-->onClick...");
                             //回调传递点击的view
-                            mItemOnClickListener.itemOnClickListener(v,itemsBean);
+                            mItemOnClickListener.itemOnClickListener(v, itemsBean);
                         }
                     });
                 }
             }
-            if (orderBean != null && orderBean.pendingDeliverToRSC) {
-                boolean isSure = false;
+            if (tag == 0 || tag == 2) {
+                if (orderBean != null && orderBean.pendingDeliverToRSC) {
+                    boolean isSure = false;
+                    final List<OrderListResult.DatasBean.ItemsBean.SKUsBean> skUs = new ArrayList<>();
+                    List<OrderListResult.DatasBean.ItemsBean.SKUsBean> skUs1 = itemsBean.SKUs;
+                    if (skUs1 != null) {
 
-                final List<OrderListResult.DatasBean.ItemsBean.SKUsBean> skUs = new ArrayList<>();
-                List<OrderListResult.DatasBean.ItemsBean.SKUsBean> skUs1 = itemsBean.SKUs;
-                if (skUs1 != null) {
+                        for (int i = 0; i < skUs1.size(); i++) {
 
-                    for (int i = 0; i < skUs1.size(); i++) {
-
-                        OrderListResult.DatasBean.ItemsBean.SKUsBean skus = skUs1.get(i);
-                        if (skus != null && skus.deliverStatus == 1) {
-                            skUs.add(skus);
-                            isSure = true;
+                            OrderListResult.DatasBean.ItemsBean.SKUsBean skus = skUs1.get(i);
+                            if (skus != null && skus.deliverStatus == 1) {
+                                skUs.add(skus);
+                                isSure = true;
+                            }
                         }
                     }
+                    if (isSure) {
+                        go_to_pay_rel.setVisibility(View.VISIBLE);
+                        go_to_pay.setText("发货到服务站");
+                        go_to_pay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                }
-
-                if (isSure) {
-                    go_to_pay_rel.setVisibility(View.VISIBLE);
-                    go_to_pay.setText("发货到服务站");
-                    go_to_pay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-//                            showPopDelivery(v, skUs);
-//                            deliveringOrderId = ordersEntity.id;
-                        }
-                    });
+                                RndLog.d(TAG, "setOnClickListener1-->onClick...");
+                                //回调传递点击的view
+                                mItemOnClickListener1.itemOnClickListener1(v, itemsBean);
+                            }
+                        });
+                    }
                 }
             }
 
@@ -263,9 +268,13 @@ public class OrderListAdapter extends CommonAdapter<OrderListResult.DatasBean.It
                 @Override
                 public void onClick(View v) {
                     //点击商品跳转到订单详情界面
-                    Bundle bundle =new Bundle();
-                    bundle.putString("orderId",itemsBean.id);
-                    IntentUtil.activityForward(context,OrderDetailActivity.class,bundle,false);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("orderId", itemsBean.id);
+                    if (context instanceof OrderSearchActivity){
+                        IntentUtil.activityForward(context, OrderDetailActivity.class, bundle, true);
+                    }else {
+                        IntentUtil.activityForward(context, OrderDetailActivity.class, bundle, false);
+                    }
                 }
             });
         }
@@ -304,20 +313,26 @@ public class OrderListAdapter extends CommonAdapter<OrderListResult.DatasBean.It
     }
 
 
-
-
-
-    public interface ItemOnClickListener{
+    //用于审核付款
+    public interface ItemOnClickListener {
         /**
          * 传递点击的view
+         *
          * @param view
          */
-        public void itemOnClickListener(View view,OrderListResult.DatasBean.ItemsBean itemsBean);
+        public void itemOnClickListener(View view, OrderListResult.DatasBean.ItemsBean itemsBean);
     }
 
 
-
-
+    //用于配送发货
+    public interface ItemOnClickListener1 {
+        /**
+         * 传递点击的view
+         *
+         * @param view
+         */
+        public void itemOnClickListener1(View view, OrderListResult.DatasBean.ItemsBean itemsBean);
+    }
 
 
 }

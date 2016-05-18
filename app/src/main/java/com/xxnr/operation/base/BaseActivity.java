@@ -2,21 +2,27 @@ package com.xxnr.operation.base;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.xxnr.operation.LoginActivity;
 import com.xxnr.operation.R;
 import com.xxnr.operation.RndApplication;
+import com.xxnr.operation.UserInfo;
 import com.xxnr.operation.developTools.app.App;
 import com.xxnr.operation.protocol.ApiType;
 import com.xxnr.operation.protocol.OnApiDataReceivedCallback;
@@ -25,6 +31,7 @@ import com.xxnr.operation.protocol.RequestParams;
 import com.xxnr.operation.utils.RndLog;
 import com.xxnr.operation.utils.Utils;
 import com.xxnr.operation.widget.CustomProgressDialog;
+import com.xxnr.operation.widget.CustomToast;
 
 public abstract class BaseActivity extends AppCompatActivity implements
         OnClickListener, OnApiDataReceivedCallback {
@@ -41,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private ImageView ivTitleRight;
 
     private Dialog progressDialog;
+    private CustomToast customToast;
 
 
     @Override
@@ -138,11 +146,17 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     public final void onResponse(Request req) {
         disMissDialog();
-        if (req.isSuccess()) {
+
+        if (req.getData().getStatus().equals("1401")) {
+            req.showErrorMsg();
+            UserInfo.tokenToLogin(this);
+        } else if (req.isSuccess()) {
             onResponsed(req);
         } else {
             req.showErrorMsg();
         }
+
+
     }
 
     // -------------------------------------------------------------
@@ -364,6 +378,20 @@ public abstract class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * 显示大号提示框
+     */
+    public void showCustomToast(String msg, int imgRes) {
+
+        if (customToast != null) {
+            customToast.cancel();
+        }
+        CustomToast.Builder builder = new CustomToast.Builder(this);
+        customToast = builder.setMessage(msg).setMessageImage(imgRes).create();
+        customToast.show();
+
+    }
+
 
     /**
      * 短时间显示Toast
@@ -376,24 +404,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (null != this.getCurrentFocus()) {
-            /**
-             * 点击空白位置 隐藏软键盘
-             */
-            InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
-        }
-        return super.onTouchEvent(event);
-    }
-
-
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         RndApplication.unDestroyActivityList.remove(this);
     }
+
+
 
 
 }

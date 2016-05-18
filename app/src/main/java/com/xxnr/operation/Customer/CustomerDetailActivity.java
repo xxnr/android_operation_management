@@ -302,7 +302,9 @@ public class CustomerDetailActivity extends BaseActivity {
                         }
                         String address = StringUtil.checkBufferStr
                                 (province, city, county, town);
-                        rsc_rsc_company_address.setText(address);
+                        if (StringUtil.checkStr(companyAddress.details)){
+                            rsc_rsc_company_address.setText(address+companyAddress.details);
+                        }
                     }
                 } else {
                     rsc_info_ll.setVisibility(View.GONE);

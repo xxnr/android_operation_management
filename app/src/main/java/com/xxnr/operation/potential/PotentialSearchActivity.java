@@ -2,16 +2,23 @@ package com.xxnr.operation.potential;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.xxnr.operation.base.BaseActivity;
 import com.xxnr.operation.R;
 import com.xxnr.operation.developTools.app.App;
@@ -19,6 +26,7 @@ import com.xxnr.operation.protocol.ApiType;
 import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.protocol.RequestParams;
 import com.xxnr.operation.protocol.bean.PotentialListResult;
+import com.xxnr.operation.utils.PullToRefreshUtils;
 import com.xxnr.operation.utils.StringUtil;
 import com.xxnr.operation.widget.ClearEditText;
 import com.xxnr.operation.widget.CustomSwipeRefreshLayout;
@@ -30,15 +38,13 @@ import java.util.TimerTask;
 /**
  * Created by CAI on 2016/5/4.
  */
-public class PotentialSearchActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadListener {
+public class PotentialSearchActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
     private ClearEditText rsc_search_edit;
     private TextView rsc_search_text;
-    private ListView custom_search_list_listView;
-    private CustomSwipeRefreshLayout swipeRefreshLayout;
+    private PullToRefreshListView custom_search_list_listView;
     private int page = 1;
     private PotentialListAdapter adapter;
-
-    private boolean isOver = false;
+    private RelativeLayout empty_View;
 
 
     @Override
@@ -93,6 +99,11 @@ public class PotentialSearchActivity extends BaseActivity implements SwipeRefres
                 if (StringUtil.checkStr(s.toString())) {
                     page = 1;
                     getData();
+                }else {
+                    if (adapter != null) {
+                        adapter.clear();
+                    }
+                    empty_View.setVisibility(View.GONE);
                 }
             }
         });
@@ -115,14 +126,17 @@ public class PotentialSearchActivity extends BaseActivity implements SwipeRefres
     private void initView() {
         rsc_search_edit = (ClearEditText) findViewById(R.id.rsc_search_edit);
         rsc_search_text = (TextView) findViewById(R.id.rsc_search_text);
-        custom_search_list_listView = (ListView) findViewById(R.id.custom_search_list_listView);
-        swipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        custom_search_list_listView = (PullToRefreshListView) findViewById(R.id.custom_search_list_listView);
+        custom_search_list_listView.setMode(PullToRefreshBase.Mode.DISABLED);
+        custom_search_list_listView.setOnRefreshListener(this);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setOnLoadListener(this);
-        // 顶部刷新的样式
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light,
-                android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+        empty_View = (RelativeLayout) findViewById(R.id.empty_View);
+        empty_View.setVisibility(View.GONE);
+        ImageView empty_image = (ImageView) findViewById(R.id.empty_image);
+        empty_image.setImageResource(R.mipmap.none_customer_icon);
+        TextView empty_text = (TextView) findViewById(R.id.empty_text);
+        empty_text.setText("未查找到相关用户");
+
     }
 
     private void getData() {
@@ -150,12 +164,12 @@ public class PotentialSearchActivity extends BaseActivity implements SwipeRefres
     public void onResponsed(Request req) {
         if (req.getApi() == ApiType.GET_POTENTIAL_LIST) {
             if (req.getData().getStatus().equals("1000")) {
-                swipeRefreshLayout.setRefreshing(false);
-                swipeRefreshLayout.setLoading(false);
+                custom_search_list_listView.onRefreshComplete();
                 PotentialListResult listResult = (PotentialListResult) req.getData();
                 List<PotentialListResult.PotentialCustomersBean> potentialCustomers = listResult.potentialCustomers;
                 if (potentialCustomers != null && !potentialCustomers.isEmpty()) {
-                    isOver = false;
+                    custom_search_list_listView.setMode(PullToRefreshBase.Mode.BOTH);
+                    empty_View.setVisibility(View.GONE);
                     if (page == 1) {
                         if (adapter == null) {
                             adapter = new PotentialListAdapter(PotentialSearchActivity.this, potentialCustomers);
@@ -165,16 +179,20 @@ public class PotentialSearchActivity extends BaseActivity implements SwipeRefres
                             adapter.addAll(potentialCustomers);
                         }
                     } else {
-                        adapter.addAll(potentialCustomers);
+                        if (adapter!=null){
+                            adapter.addAll(potentialCustomers);
+                        }
                     }
                 } else {
-                    isOver = true;
                     if (page == 1) {
+                        custom_search_list_listView.setMode(PullToRefreshBase.Mode.DISABLED);
+                        empty_View.setVisibility(View.VISIBLE);
                         if (adapter != null) {
                             adapter.clear();
-                        } else {
-                            page--;
                         }
+                    } else {
+                        page--;
+                        showToast("没有更多客户");
                     }
                 }
             }
@@ -185,27 +203,39 @@ public class PotentialSearchActivity extends BaseActivity implements SwipeRefres
 
     //下拉刷新
     @Override
-    public void onRefresh() {
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
-    //加载更多
+    //上拉加载更多
     @Override
-    public void onLoad() {
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
+        page++;
+        getData();
+    }
 
-        if (!isOver) {
-            swipeRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    page++;
-                    getData();
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        try {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (this.getCurrentFocus() != null) {
+                    if (this.getCurrentFocus().getWindowToken() != null) {
+                        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0); //强制隐藏键盘
+                    }
                 }
-            }, 1000);
-        } else {
-            swipeRefreshLayout.setLoading(false);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
+        return super.dispatchTouchEvent(event);
     }
+
+
 
 }

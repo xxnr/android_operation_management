@@ -74,12 +74,16 @@ public class PotentialListAdapter extends CommonAdapter<PotentialListResult.Pote
                     try {
                         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("potential", itemsBean);
-                    IntentUtil.activityForward(context, PotentialDetailActivity.class, bundle, false);
+                    if (context instanceof PotentialSearchActivity) {
+                        IntentUtil.activityForward(context, PotentialDetailActivity.class, bundle, true);
+                    } else {
+                        IntentUtil.activityForward(context, PotentialDetailActivity.class, bundle, false);
+                    }
                 }
             });
 

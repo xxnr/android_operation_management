@@ -144,6 +144,11 @@ public class PotentialDetailActivity extends BaseActivity {
                     if (user.user != null) {
                         customer_invite_name.setText(user.user.name);
                     }
+
+                    //备注
+                    if (StringUtil.checkStr(user.remarks)){
+                        customer_detail_remark.setText(user.remarks);
+                    }
                 }
 
             }

@@ -18,9 +18,6 @@ import java.util.ArrayList;
  */
 public class CustomerManageActivity extends BaseActivity {
     private ArrayList<String> titleList = new ArrayList<>();
-    private ViewPager viewPager;
-    private FragmentManager fragmentManager;
-    private TabLayout mTabLayout;
 
     @Override
     public int getLayout() {
@@ -46,10 +43,10 @@ public class CustomerManageActivity extends BaseActivity {
     }
 
     private void initView() {
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
         initTabs();
-        fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager.setAdapter(new CustomerPagerAdapter(fragmentManager, titleList));
         mTabLayout.setupWithViewPager(viewPager);//设置联动
     }

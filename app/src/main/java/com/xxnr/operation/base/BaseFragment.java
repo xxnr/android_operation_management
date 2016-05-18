@@ -3,7 +3,9 @@
  */
 package com.xxnr.operation.base;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 
+import com.xxnr.operation.LoginActivity;
+import com.xxnr.operation.UserInfo;
 import com.xxnr.operation.developTools.app.App;
 import com.xxnr.operation.protocol.ApiType;
 import com.xxnr.operation.protocol.OnApiDataReceivedCallback;
@@ -20,6 +24,7 @@ import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.protocol.RequestParams;
 import com.xxnr.operation.utils.Utils;
 import com.xxnr.operation.widget.CustomProgressDialog;
+import com.xxnr.operation.widget.CustomToast;
 
 
 /**
@@ -32,6 +37,8 @@ public abstract class BaseFragment extends Fragment implements
     public LayoutInflater inflater;
 
     private Dialog progressDialog;
+
+    private CustomToast customToast;
 
 
     @Override
@@ -74,7 +81,10 @@ public abstract class BaseFragment extends Fragment implements
     @Override
     public void onResponse(Request req) {
         disMissDialog();
-        if (req.isSuccess()) {
+        if (req.getData().getStatus().equals("1401")) {
+            req.showErrorMsg();
+            UserInfo.tokenToLogin(activity);
+        } else if (req.isSuccess()) {
             onResponsed(req);
         } else {
             req.showErrorMsg();
@@ -121,7 +131,7 @@ public abstract class BaseFragment extends Fragment implements
         if (progressDialog != null && progressDialog.isShowing()) {
             try {
                 progressDialog.dismiss();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             progressDialog = null;
@@ -150,6 +160,23 @@ public abstract class BaseFragment extends Fragment implements
             e.printStackTrace();
         }
     }
+
+
+    /**
+     * 显示大号提示框
+     */
+    public void showCustomToast(String msg, int imgRes) {
+
+        if (customToast != null) {
+            customToast.cancel();
+        }
+        CustomToast.Builder builder = new CustomToast.Builder(activity);
+        customToast = builder.setMessage(msg).setMessageImage(imgRes).create();
+        customToast.show();
+
+    }
+
+
 
 
 }

@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.xxnr.operation.base.BaseFragment;
 import com.xxnr.operation.MsgID;
 import com.xxnr.operation.R;
@@ -18,6 +20,7 @@ import com.xxnr.operation.protocol.ApiType;
 import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.protocol.RequestParams;
 import com.xxnr.operation.protocol.bean.CustomerListResult;
+import com.xxnr.operation.utils.PullToRefreshUtils;
 import com.xxnr.operation.utils.RndLog;
 import com.xxnr.operation.utils.StringUtil;
 import com.xxnr.operation.widget.CustomSwipeRefreshLayout;
@@ -33,14 +36,12 @@ import okhttp3.Response;
 /**
  * Created by CAI on 2016/5/3.
  */
-public class CustomerManageFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadListener {
-    private CustomSwipeRefreshLayout swipeRefreshLayout;
-    private ListView listView;
+public class CustomerManageFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
+    private PullToRefreshListView listView;
     private int position = 0;
     private int page = 1;
     private int query = 0;
     private CustomerListAdapter adapter;
-    private boolean isOver = false;
 
 
     @Override
@@ -48,13 +49,11 @@ public class CustomerManageFragment extends BaseFragment implements SwipeRefresh
 
         View view = inflater.inflate(R.layout.customer_list_fragment_layout, null);
 
-        swipeRefreshLayout = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setOnLoadListener(this);
-        // 顶部刷新的样式
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light,
-                android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
-        listView = (ListView) view.findViewById(R.id.custom_list_listView);
+        listView = (PullToRefreshListView) view.findViewById(R.id.custom_list_listView);
+        listView.setMode(PullToRefreshBase.Mode.BOTH);
+        listView.setOnRefreshListener(this);
+        //设置刷新的文字
+        PullToRefreshUtils.setFreshText(listView);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -66,7 +65,6 @@ public class CustomerManageFragment extends BaseFragment implements SwipeRefresh
             query = 3;
         }
         showProgressDialog();
-        swipeRefreshLayout.setRefreshing(true);
         getData();
 
         //修改用户信息通知
@@ -74,6 +72,7 @@ public class CustomerManageFragment extends BaseFragment implements SwipeRefresh
 
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
+                listView.getRefreshableView().setSelection(0);
                 page = 1;
                 getData();
             }
@@ -83,13 +82,12 @@ public class CustomerManageFragment extends BaseFragment implements SwipeRefresh
     }
 
 
-
     private void getData() {
         RequestParams params = new RequestParams();
         params.put("page", page);
         params.put("query", query);
         params.put("max", 20);
-        params.put("token",App.getApp().getToken());
+        params.put("token", App.getApp().getToken());
         execApi(ApiType.GET_USERS_LIST.setMethod(ApiType.RequestMethod.GET), params);
     }
 
@@ -102,62 +100,58 @@ public class CustomerManageFragment extends BaseFragment implements SwipeRefresh
 
     @Override
     public void onResponsed(Request req) {
-        if (req.getApi()==ApiType.GET_USERS_LIST){
-            if (req.getData().getStatus().equals("1000")){
-                swipeRefreshLayout.setRefreshing(false);
-                swipeRefreshLayout.setLoading(false);
+        if (req.getApi() == ApiType.GET_USERS_LIST) {
+            listView.onRefreshComplete();
+            if (req.getData().getStatus().equals("1000")) {
                 CustomerListResult customerListResult = (CustomerListResult) req.getData();
-                List<CustomerListResult.Users.ItemsBean> itemsBeen = customerListResult.users.items;
-                if (itemsBeen != null && !itemsBeen.isEmpty()) {
-                    isOver = false;
-                    if (page == 1) {
-                        if (adapter == null) {
-                            adapter = new CustomerListAdapter(activity, itemsBeen);
-                            listView.setAdapter(adapter);
+                if (customerListResult.users != null) {
+                    List<CustomerListResult.Users.ItemsBean> itemsBeen = customerListResult.users.items;
+                    if (itemsBeen != null && !itemsBeen.isEmpty()) {
+                        if (page == 1) {
+                            if (adapter == null) {
+                                adapter = new CustomerListAdapter(activity, itemsBeen);
+                                listView.setAdapter(adapter);
+                            } else {
+                                adapter.clear();
+                                adapter.addAll(itemsBeen);
+                            }
                         } else {
-                            adapter.clear();
-                            adapter.addAll(itemsBeen);
+                            if (adapter != null) {
+                                adapter.addAll(itemsBeen);
+                            }
                         }
                     } else {
-                        adapter.addAll(itemsBeen);
-                    }
-                } else {
-                    isOver = true;
-                    if (page == 1) {
-                        if (adapter != null) {
-                            adapter.clear();
+                        if (page == 1) {
+                            if (adapter != null) {
+                                adapter.clear();
+                            }
                         } else {
+                            showToast("没有更多客户");
                             page--;
                         }
                     }
+
                 }
+
             }
 
         }
     }
 
+
     //下拉刷新
     @Override
-    public void onRefresh() {
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
-    //加载更多
+    //上拉加载更多
     @Override
-    public void onLoad() {
-
-        if (!isOver) {
-            swipeRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    page++;
-                    getData();
-                }
-            }, 1000);
-        } else {
-            swipeRefreshLayout.setLoading(false);
-        }
-
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
+        page++;
+        getData();
     }
 }

@@ -94,7 +94,7 @@ public final class ServerInterface {
      */
     private Response getResponseByApi(ApiType api, RequestParams params) {
 
-        params.put("user-agent", "Android-v2.0");
+        params.put("user-agent", "Android-v1.0");
         try {
             // TODO 判断api类型
             if (api.getRequestMethod() == ApiType.RequestMethod.GET) {

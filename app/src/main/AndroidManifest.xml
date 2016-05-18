@@ -36,17 +36,23 @@
         <!--客户详情-->
         <activity android:name=".customer.CustomerDetailActivity" />
         <!--客户搜索-->
-        <activity android:name=".customer.CustomerSearchActivity" />
+        <activity
+            android:name=".customer.CustomerSearchActivity"
+            android:windowSoftInputMode="adjustPan" />
         <!--潜在客户-->
         <activity android:name=".potential.PotentialCustomerActivity" />
         <!--潜在客户详情-->
         <activity android:name=".potential.PotentialDetailActivity" />
         <!--潜在客户搜索-->
-        <activity android:name=".potential.PotentialSearchActivity" />
+        <activity
+            android:name=".potential.PotentialSearchActivity"
+            android:windowSoftInputMode="adjustPan" />
         <!--订单管理-->
         <activity android:name=".order.OrderManageActivity" />
         <!--订单搜索-->
-        <activity android:name=".order.OrderSearchActivity" />
+        <activity
+            android:name=".order.OrderSearchActivity"
+            android:windowSoftInputMode="adjustPan" />
         <!--订单详情-->
         <activity android:name=".order.OrderDetailActivity" />
         <!--查看支付详情-->

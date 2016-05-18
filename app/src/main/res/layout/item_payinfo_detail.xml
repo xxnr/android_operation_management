@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:text="支付完成时间："
+            android:text="支付时间："
             android:textColor="@color/deep_black"
             android:textSize="14dp" />
 

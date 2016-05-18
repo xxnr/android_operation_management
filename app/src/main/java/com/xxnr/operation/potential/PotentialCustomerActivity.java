@@ -5,6 +5,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.xxnr.operation.base.BaseActivity;
 import com.xxnr.operation.R;
 import com.xxnr.operation.developTools.app.App;
@@ -13,6 +15,7 @@ import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.protocol.RequestParams;
 import com.xxnr.operation.protocol.bean.PotentialListResult;
 import com.xxnr.operation.utils.IntentUtil;
+import com.xxnr.operation.utils.PullToRefreshUtils;
 import com.xxnr.operation.widget.CustomSwipeRefreshLayout;
 
 import java.util.List;
@@ -20,12 +23,10 @@ import java.util.List;
 /**
  * Created by CAI on 2016/5/4.
  */
-public class PotentialCustomerActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadListener {
-    private ListView listView;
-    private CustomSwipeRefreshLayout swipeRefreshLayout;
+public class PotentialCustomerActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+    private PullToRefreshListView listView;
     private int page = 1;
 
-    private boolean isOver = false;
     private PotentialListAdapter adapter;
 
     @Override
@@ -64,13 +65,12 @@ public class PotentialCustomerActivity extends BaseActivity implements SwipeRefr
 
     private void initView() {
 
-        swipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setOnLoadListener(this);
-        // 顶部刷新的样式
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light,
-                android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
-        listView = (ListView) findViewById(R.id.listView);
+        listView = (PullToRefreshListView) findViewById(R.id.listView);
+
+        listView.setMode(PullToRefreshBase.Mode.BOTH);
+        listView.setOnRefreshListener(this);
+        //设置刷新的文字
+        PullToRefreshUtils.setFreshText(listView);
 
     }
 
@@ -82,13 +82,11 @@ public class PotentialCustomerActivity extends BaseActivity implements SwipeRefr
     @Override
     public void onResponsed(Request req) {
         if (req.getApi() == ApiType.GET_POTENTIAL_LIST) {
+            listView.onRefreshComplete();
             if (req.getData().getStatus().equals("1000")) {
-                swipeRefreshLayout.setRefreshing(false);
-                swipeRefreshLayout.setLoading(false);
                 PotentialListResult listResult = (PotentialListResult) req.getData();
                 List<PotentialListResult.PotentialCustomersBean> potentialCustomers = listResult.potentialCustomers;
                 if (potentialCustomers != null && !potentialCustomers.isEmpty()) {
-                    isOver = false;
                     if (page == 1) {
                         if (adapter == null) {
                             adapter = new PotentialListAdapter(PotentialCustomerActivity.this, potentialCustomers);
@@ -98,16 +96,19 @@ public class PotentialCustomerActivity extends BaseActivity implements SwipeRefr
                             adapter.addAll(potentialCustomers);
                         }
                     } else {
-                        adapter.addAll(potentialCustomers);
+
+                        if (adapter!=null){
+                            adapter.addAll(potentialCustomers);
+                        }
                     }
                 } else {
-                    isOver = true;
                     if (page == 1) {
                         if (adapter != null) {
                             adapter.clear();
-                        } else {
-                            page--;
                         }
+                    } else {
+                        page--;
+                        showToast("没有更多客户");
                     }
                 }
             }
@@ -116,25 +117,19 @@ public class PotentialCustomerActivity extends BaseActivity implements SwipeRefr
     }
 
 
+    //下拉刷新
     @Override
-    public void onRefresh() {
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
+    //上拉加载更多
     @Override
-    public void onLoad() {
-        if (!isOver) {
-            swipeRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    page++;
-                    getData();
-                }
-            }, 1000);
-        } else {
-            swipeRefreshLayout.setLoading(false);
-        }
-
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
+        page++;
+        getData();
     }
 }

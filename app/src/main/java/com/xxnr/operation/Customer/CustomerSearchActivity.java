@@ -3,18 +3,27 @@ package com.xxnr.operation.customer;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.xxnr.operation.base.BaseActivity;
 import com.xxnr.operation.R;
 import com.xxnr.operation.developTools.app.App;
@@ -22,6 +31,7 @@ import com.xxnr.operation.protocol.ApiType;
 import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.protocol.RequestParams;
 import com.xxnr.operation.protocol.bean.CustomerListResult;
+import com.xxnr.operation.utils.PullToRefreshUtils;
 import com.xxnr.operation.utils.RndLog;
 import com.xxnr.operation.utils.StringUtil;
 import com.xxnr.operation.widget.ClearEditText;
@@ -40,15 +50,16 @@ import okhttp3.Response;
 /**
  * Created by CAI on 2016/5/4.
  */
-public class CustomerSearchActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadListener {
+public class CustomerSearchActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
     private ClearEditText rsc_search_edit;
     private TextView rsc_search_text;
-    private ListView custom_search_list_listView;
-    private CustomSwipeRefreshLayout swipeRefreshLayout;
+    private PullToRefreshListView custom_search_list_listView;
+
+
     private CustomerListAdapter adapter;
-    private boolean isOver = false;
 
     private int page = 1;
+    private RelativeLayout empty_View;
 
     @Override
     public int getLayout() {
@@ -58,11 +69,8 @@ public class CustomerSearchActivity extends BaseActivity implements SwipeRefresh
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         initView();
-
-
         rsc_search_text.setText("取消");
         rsc_search_text.setOnClickListener(this);
-
         rsc_search_edit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
@@ -104,6 +112,11 @@ public class CustomerSearchActivity extends BaseActivity implements SwipeRefresh
                 if (StringUtil.checkStr(s.toString())) {
                     page = 1;
                     getData();
+                } else {
+                    if (adapter != null) {
+                        adapter.clear();
+                    }
+                    empty_View.setVisibility(View.GONE);
                 }
             }
         });
@@ -126,14 +139,17 @@ public class CustomerSearchActivity extends BaseActivity implements SwipeRefresh
     private void initView() {
         rsc_search_edit = (ClearEditText) findViewById(R.id.rsc_search_edit);
         rsc_search_text = (TextView) findViewById(R.id.rsc_search_text);
-        custom_search_list_listView = (ListView) findViewById(R.id.custom_search_list_listView);
-        swipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        custom_search_list_listView = (PullToRefreshListView) findViewById(R.id.custom_search_list_listView);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setOnLoadListener(this);
-        // 顶部刷新的样式
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light,
-                android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+        empty_View = (RelativeLayout) findViewById(R.id.empty_View);
+        empty_View.setVisibility(View.GONE);
+        ImageView empty_image = (ImageView) findViewById(R.id.empty_image);
+        empty_image.setImageResource(R.mipmap.none_customer_icon);
+        TextView empty_text = (TextView) findViewById(R.id.empty_text);
+        empty_text.setText("未查找到相关用户");
+
+        custom_search_list_listView.setOnRefreshListener(this);
+        custom_search_list_listView.setMode(PullToRefreshBase.Mode.DISABLED);
     }
 
     private void getData() {
@@ -142,7 +158,7 @@ public class CustomerSearchActivity extends BaseActivity implements SwipeRefresh
         params.put("page", page);
         params.put("search", searchText);
         params.put("max", 20);
-        params.put("token",App.getApp().getToken());
+        params.put("token", App.getApp().getToken());
         execApi(ApiType.GET_USERS_LIST.setMethod(ApiType.RequestMethod.GET), params);
     }
 
@@ -159,32 +175,39 @@ public class CustomerSearchActivity extends BaseActivity implements SwipeRefresh
 
     @Override
     public void onResponsed(Request req) {
-        if (req.getApi()==ApiType.GET_USERS_LIST){
-            if (req.getData().getStatus().equals("1000")){
-                swipeRefreshLayout.setRefreshing(false);
-                swipeRefreshLayout.setLoading(false);
+        if (req.getApi() == ApiType.GET_USERS_LIST) {
+            custom_search_list_listView.onRefreshComplete();
+            if (req.getData().getStatus().equals("1000")) {
                 CustomerListResult customerListResult = (CustomerListResult) req.getData();
-                List<CustomerListResult.Users.ItemsBean> itemsBeen = customerListResult.users.items;
-                if (itemsBeen != null && !itemsBeen.isEmpty()) {
-                    isOver = false;
-                    if (page == 1) {
-                        if (adapter == null) {
-                            adapter = new CustomerListAdapter(CustomerSearchActivity.this, itemsBeen);
-                            custom_search_list_listView.setAdapter(adapter);
+                if (customerListResult.users != null) {
+                    List<CustomerListResult.Users.ItemsBean> itemsBeen = customerListResult.users.items;
+                    if (itemsBeen != null && !itemsBeen.isEmpty()) {
+                        custom_search_list_listView.setMode(PullToRefreshBase.Mode.BOTH);
+                        empty_View.setVisibility(View.GONE);
+                        if (page == 1) {
+                            if (adapter == null) {
+
+                                adapter = new CustomerListAdapter(CustomerSearchActivity.this, itemsBeen);
+                                custom_search_list_listView.setAdapter(adapter);
+                            } else {
+                                adapter.clear();
+                                adapter.addAll(itemsBeen);
+                            }
                         } else {
-                            adapter.clear();
-                            adapter.addAll(itemsBeen);
+                            if (adapter != null) {
+                                adapter.addAll(itemsBeen);
+                            }
                         }
                     } else {
-                        adapter.addAll(itemsBeen);
-                    }
-                } else {
-                    isOver = true;
-                    if (page == 1) {
-                        if (adapter != null) {
-                            adapter.clear();
+                        if (page == 1) {
+                            custom_search_list_listView.setMode(PullToRefreshBase.Mode.DISABLED);
+                            empty_View.setVisibility(View.VISIBLE);
+                            if (adapter != null) {
+                                adapter.clear();
+                            }
                         } else {
                             page--;
+                            showToast("没有更多客户");
                         }
                     }
                 }
@@ -196,26 +219,36 @@ public class CustomerSearchActivity extends BaseActivity implements SwipeRefresh
 
     //下拉刷新
     @Override
-    public void onRefresh() {
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
         page = 1;
         getData();
     }
 
-    //加载更多
+    //上拉加载更多
     @Override
-    public void onLoad() {
-        if (!isOver) {
-            swipeRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    page++;
-                    getData();
-                }
-            }, 1000);
-        } else {
-            swipeRefreshLayout.setLoading(false);
-        }
-
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        PullToRefreshUtils.setFreshClose(refreshView);
+        page++;
+        getData();
     }
 
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        try {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (this.getCurrentFocus() != null) {
+                    if (this.getCurrentFocus().getWindowToken() != null) {
+                        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0); //强制隐藏键盘
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return super.dispatchTouchEvent(event);
+    }
 }

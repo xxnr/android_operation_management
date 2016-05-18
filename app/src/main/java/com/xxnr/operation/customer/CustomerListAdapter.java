@@ -96,7 +96,11 @@ public class CustomerListAdapter extends CommonAdapter<CustomerListResult.Users.
                     }
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("customer", itemsBean);
-                    IntentUtil.activityForward(context, CustomerDetailActivity.class, bundle, false);
+                    if (context instanceof CustomerSearchActivity){
+                        IntentUtil.activityForward(context, CustomerDetailActivity.class, bundle, true);
+                    }else {
+                        IntentUtil.activityForward(context, CustomerDetailActivity.class, bundle, false);
+                    }
                 }
             });
 

@@ -7,8 +7,10 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.xxnr.operation.MsgID;
 import com.xxnr.operation.base.BaseActivity;
 import com.xxnr.operation.R;
+import com.xxnr.operation.developTools.msg.MsgCenter;
 import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.utils.IntentUtil;
 import com.xxnr.operation.utils.PopWindowUtils;
@@ -60,6 +62,23 @@ public class OrderManageActivity extends BaseActivity implements OrderListFragme
         fragmentManager = getSupportFragmentManager();
         viewPager.setAdapter(new OrderListPagerAdapter(fragmentManager, titleList));
         mTabLayout.setupWithViewPager(viewPager);//设置联动
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+            @Override
+            public void onPageSelected(int position) {
+                //通知 订单列表刷新
+                MsgCenter.fireNull(MsgID.select_tab, position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -85,7 +104,7 @@ public class OrderManageActivity extends BaseActivity implements OrderListFragme
 
     @Override
     public void backgroundSwitch(int bg) {
-        if (pop_bg!=null){
+        if (pop_bg != null) {
             PopWindowUtils.setBackgroundBlack(pop_bg, bg);
         }
     }
