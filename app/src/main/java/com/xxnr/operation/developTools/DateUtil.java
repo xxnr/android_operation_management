@@ -27,9 +27,12 @@ public final class DateUtil {
 	public static final String FORMAT_THREE = "yyyyMMdd-HHmmss";
 
 	// 格式：年－月－日
-	public static final String LONG_DATE_FORMAT = "yyyy年MM月dd日";
+	public static final String CHINESE_DATE_FORMAT = "yyyy年MM月dd日";
+    // 格式：－－
+    public static final String UNDERLINE_DATE_FORMAT = "yyyy-MM-dd";
 
-	// 格式：月－日
+
+    // 格式：月－日
 	public static final String SHORT_DATE_FORMAT = "MM-dd";
 
 	// 格式: 年月日时分秒
@@ -72,7 +75,7 @@ public final class DateUtil {
 
 	/**
 	 * 把符合日期格式的字符串转换为日期类型
-	 * 
+	 *
 	 * @param dateStr
 	 * @return
 	 */
@@ -124,7 +127,7 @@ public final class DateUtil {
 
 	/**
 	 * 获取当前时间的指定格式
-	 * 
+	 *
 	 * @param format
 	 * @return
 	 */
@@ -133,7 +136,7 @@ public final class DateUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dateStr
 	 * @param amount
 	 * @return
@@ -148,7 +151,7 @@ public final class DateUtil {
 
 	/**
 	 * 两个日期相减
-	 * 
+	 *
 	 * @param firstTime
 	 * @param secTime
 	 * @return 相减得到的秒数
@@ -161,7 +164,7 @@ public final class DateUtil {
 
 	/**
 	 * 获得某月的天数
-	 * 
+	 *
 	 * @param year
 	 *            int
 	 * @param month
@@ -201,7 +204,7 @@ public final class DateUtil {
 
 	/**
 	 * 获取某年某月的天数
-	 * 
+	 *
 	 * @param year
 	 *            int
 	 * @param month
@@ -216,7 +219,7 @@ public final class DateUtil {
 
 	/**
 	 * 获得当前日期(几号)
-	 * 
+	 *
 	 * @return int
 	 */
 	public static int getToday() {
@@ -226,7 +229,7 @@ public final class DateUtil {
 
 	/**
 	 * 获得当前月份
-	 * 
+	 *
 	 * @return int
 	 */
 	public static int getToMonth() {
@@ -236,7 +239,7 @@ public final class DateUtil {
 
 	/**
 	 * 获得当前年份
-	 * 
+	 *
 	 * @return int
 	 */
 	public static int getToYear() {
@@ -246,7 +249,7 @@ public final class DateUtil {
 
 	/**
 	 * 返回日期的天
-	 * 
+	 *
 	 * @param date
 	 *            Date
 	 * @return int
@@ -259,7 +262,7 @@ public final class DateUtil {
 
 	/**
 	 * 返回日期的年
-	 * 
+	 *
 	 * @param date
 	 *            Date
 	 * @return int
@@ -272,7 +275,7 @@ public final class DateUtil {
 
 	/**
 	 * 返回日期的月份，1-12
-	 * 
+	 *
 	 * @param date
 	 *            Date
 	 * @return int
@@ -285,7 +288,7 @@ public final class DateUtil {
 
 	/**
 	 * 计算两个日期相差的天数，如果date2 > date1 返回正数，否则返回负数
-	 * 
+	 *
 	 * @param date1
 	 *            Date
 	 * @param date2
@@ -298,47 +301,47 @@ public final class DateUtil {
 
 	/**
 	 * 比较两个日期的年差
-	 * 
+	 *
 	 * @param befor
 	 * @param after
 	 * @return
 	 */
 	public static int yearDiff(String before, String after) {
-		Date beforeDay = stringtoDate(before, LONG_DATE_FORMAT);
-		Date afterDay = stringtoDate(after, LONG_DATE_FORMAT);
+		Date beforeDay = stringtoDate(before, CHINESE_DATE_FORMAT);
+		Date afterDay = stringtoDate(after, CHINESE_DATE_FORMAT);
 		return getYear(afterDay) - getYear(beforeDay);
 	}
 
 	/**
 	 * 比较指定日期与当前日期的差
-	 * 
+	 *
 	 * @param befor
 	 * @param after
 	 * @return
 	 */
 	public static int yearDiffCurr(String after) {
 		Date beforeDay = new Date();
-		Date afterDay = stringtoDate(after, LONG_DATE_FORMAT);
+		Date afterDay = stringtoDate(after, CHINESE_DATE_FORMAT);
 		return getYear(beforeDay) - getYear(afterDay);
 	}
 
 	/**
 	 * 比较指定日期与当前日期的差
-	 * 
+	 *
 	 * @param before
 	 * @return
 	 * @author chenyz
 	 */
 	public static long dayDiffCurr(String before) {
-		Date currDate = DateUtil.stringtoDate(currDay(), LONG_DATE_FORMAT);
-		Date beforeDate = stringtoDate(before, LONG_DATE_FORMAT);
+		Date currDate = DateUtil.stringtoDate(currDay(), CHINESE_DATE_FORMAT);
+		Date beforeDate = stringtoDate(before, CHINESE_DATE_FORMAT);
 		return (currDate.getTime() - beforeDate.getTime()) / 86400000;
 
 	}
 
 	/**
 	 * 获取每月的第一周
-	 * 
+	 *
 	 * @param year
 	 * @param month
 	 * @return
@@ -353,7 +356,7 @@ public final class DateUtil {
 
 	/**
 	 * 获取每月的最后一周
-	 * 
+	 *
 	 * @param year
 	 * @param month
 	 * @return
@@ -368,7 +371,7 @@ public final class DateUtil {
 
 	/**
 	 * 获得当前日期字符串，格式"yyyy-MM-dd HH:mm:ss"
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getNow() {
@@ -378,7 +381,7 @@ public final class DateUtil {
 
 	/**
 	 * 根据生日获取星座
-	 * 
+	 *
 	 * @param birth
 	 *            YYYY-mm-dd
 	 * @return
@@ -401,7 +404,7 @@ public final class DateUtil {
 
 	/**
 	 * 判断日期是否有效,包括闰年的情况
-	 * 
+	 *
 	 * @param date
 	 *            YYYY-mm-dd
 	 * @return
@@ -422,7 +425,7 @@ public final class DateUtil {
 
 	/**
 	 * 取得指定日期过 months 月后的日期 (当 months 为负数表示指定月之前);
-	 * 
+	 *
 	 * @param date
 	 *            日期 为null时表示当天
 	 * @param month
@@ -439,7 +442,7 @@ public final class DateUtil {
 
 	/**
 	 * 取得指定日期过 day 天后的日期 (当 day 为负数表示指日期之前);
-	 * 
+	 *
 	 * @param date
 	 *            日期 为null时表示当天
 	 * @param month
@@ -456,7 +459,7 @@ public final class DateUtil {
 
 	/**
 	 * 取得距离今天 day 日的日期
-	 * 
+	 *
 	 * @param day
 	 * @param format
 	 * @return
@@ -471,7 +474,7 @@ public final class DateUtil {
 
 	/**
 	 * 取得指定日期过 day 周后的日期 (当 day 为负数表示指定月之前)
-	 * 
+	 *
 	 * @param date
 	 *            日期 为null时表示当天
 	 */
@@ -488,21 +491,21 @@ public final class DateUtil {
 	 * 获取当前的日期(yyyy-MM-dd)
 	 */
 	public static String currDay() {
-		return DateUtil.dateToString(new Date(), DateUtil.LONG_DATE_FORMAT);
+		return DateUtil.dateToString(new Date(), DateUtil.CHINESE_DATE_FORMAT);
 	}
 
 	/**
 	 * 获取昨天的日期
-	 * 
+	 *
 	 * @return
 	 */
 	public static String befoDay() {
-		return befoDay(DateUtil.LONG_DATE_FORMAT);
+		return befoDay(DateUtil.CHINESE_DATE_FORMAT);
 	}
 
 	/**
 	 * 根据时间类型获取昨天的日期
-	 * 
+	 *
 	 * @param format
 	 * @return
 	 * @author chenyz
@@ -516,12 +519,12 @@ public final class DateUtil {
 	 */
 	public static String afterDay() {
 		return DateUtil.dateToString(DateUtil.nextDay(new Date(), 1),
-				DateUtil.LONG_DATE_FORMAT);
+				DateUtil.CHINESE_DATE_FORMAT);
 	}
 
 	/**
 	 * 取得当前时间距离1900/1/1的天数
-	 * 
+	 *
 	 * @return
 	 */
 	public static int getDayNum() {
@@ -536,7 +539,7 @@ public final class DateUtil {
 
 	/**
 	 * getDayNum的逆方法(用于处理Excel取出的日期格式数据等)
-	 * 
+	 *
 	 * @param day
 	 * @return
 	 */
@@ -558,7 +561,7 @@ public final class DateUtil {
 
 	/**
 	 * 获取本月第一天
-	 * 
+	 *
 	 * @param format
 	 * @return
 	 */
@@ -570,7 +573,7 @@ public final class DateUtil {
 
 	/**
 	 * 获取本月最后一天
-	 * 
+	 *
 	 * @param format
 	 * @return
 	 */
@@ -584,24 +587,24 @@ public final class DateUtil {
 
 	/**
 	 * 获取yyyy年mm月dd日
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
 	public static String getChineDate(Date date) {
-		String strDate = DateUtil.dateToString(date, DateUtil.LONG_DATE_FORMAT);
+		String strDate = DateUtil.dateToString(date, DateUtil.CHINESE_DATE_FORMAT);
 		return strDate.split("-")[0] + "年" + strDate.split("-")[1] + "月"
 				+ strDate.split("-")[2] + "日";
 	}
 
 	/**
 	 * 获得yyyy年MM月dd日 hh:mm:ss
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
 	public static String getChineLongDate(Date date) {
-		String strDate = DateUtil.dateToString(date, DateUtil.LONG_DATE_FORMAT);
+		String strDate = DateUtil.dateToString(date, DateUtil.CHINESE_DATE_FORMAT);
 		return strDate.split("-")[0] + "年" + strDate.split("-")[1] + "月"
 				+ strDate.split("-")[2] + "日" + " "
 				+ dateToString(date, LONG_TIME_FORMAT);
@@ -609,12 +612,12 @@ public final class DateUtil {
 
 	/**
 	 * 获取mm月dd日 hh:mm:ss
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
 	public static String getChineShortDate(Date date) {
-		String strDate = DateUtil.dateToString(date, DateUtil.LONG_DATE_FORMAT);
+		String strDate = DateUtil.dateToString(date, DateUtil.CHINESE_DATE_FORMAT);
 		return strDate.split("-")[1] + "月" + strDate.split("-")[2] + "日" + " "
 				+ dateToString(date, LONG_TIME_FORMAT);
 	}

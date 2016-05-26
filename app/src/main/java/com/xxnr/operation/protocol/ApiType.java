@@ -1,17 +1,22 @@
 package com.xxnr.operation.protocol;
 
 
+import com.xxnr.operation.protocol.bean.AgentReportResult;
+import com.xxnr.operation.protocol.bean.CurrentWeekReportResult;
 import com.xxnr.operation.protocol.bean.CustomerDetailResult;
 import com.xxnr.operation.protocol.bean.CustomerListResult;
+import com.xxnr.operation.protocol.bean.DailyReportResult;
 import com.xxnr.operation.protocol.bean.GetPublicKeyResult;
-import com.xxnr.operation.protocol.bean.LoginResult;
 import com.xxnr.operation.protocol.bean.OfflinePayTypeResult;
-import com.xxnr.operation.protocol.bean.OfflineStateListResult;
-import com.xxnr.operation.protocol.bean.OrderDetailResult;
 import com.xxnr.operation.protocol.bean.OrderListResult;
 import com.xxnr.operation.protocol.bean.PotentialDetailResult;
 import com.xxnr.operation.protocol.bean.PotentialListResult;
 import com.xxnr.operation.protocol.bean.RscInfoResult;
+import com.xxnr.operation.protocol.bean.LoginResult;
+import com.xxnr.operation.protocol.bean.OfflineStateListResult;
+import com.xxnr.operation.protocol.bean.OrderDetailResult;
+import com.xxnr.operation.protocol.bean.StatisticReportResult;
+import com.xxnr.operation.protocol.bean.WeekReportResult;
 
 /**
  * API 请求的类型
@@ -85,10 +90,34 @@ public enum ApiType {
      */
     SKUS_DELIVERY("/manager/api/orders/SKUsDelivery", ResponseResult.class),
 
+    /**
+     * 数据中心：今日实时
+     */
+    GET_DAILY_REPORT("/manager/api/dashboard/getDailyReport", DailyReportResult.class),
+
+    /**
+     * 数据中心：累计数据
+     */
+    GET_STATISTIC_REPORT("/manager/api/dashboard/getStatistic", StatisticReportResult.class),
+
+    /**
+     * 数据中心：一周数据
+     */
+    GET_WEEK_REPORT("/manager/api/dashboard/queryDailyReport", WeekReportResult.class),
+    /**
+     * 数据中心：经纪人排行
+     */
+    GET_AGENT_RANK("/manager/api/dashboard/queryAgentReportYesterday", AgentReportResult.class),
+
+    /**
+     * 数据中心：获得本周数据
+     */
+    GET_CURRENT_WEEK("/manager/api/dashboard/getWeeklyReport", CurrentWeekReportResult.class),
 
     TEST("", ResponseResult.class);
 
-    private static String server_url = "http://101.200.194.203";
+        private static String server_url = "http://101.200.194.203";
+//    private static String server_url = "http://api.xinxinnongren.com";
 
 
     public static final String url = server_url;

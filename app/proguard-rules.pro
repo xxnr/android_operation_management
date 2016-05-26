@@ -167,6 +167,9 @@
      #picasso
     -dontwarn com.squareup.picasso.**
     -keep class com.squareup.picasso.** { *;}
+     #times
+     -dontwarn  com.squareup.timessquare.**
+     -keep class  com.squareup.timessquare.** { *;}
      #Xutils
     -keep class com.lidroid.** { *; }
 

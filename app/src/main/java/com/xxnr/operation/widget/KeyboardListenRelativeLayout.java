@@ -9,6 +9,8 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.xxnr.operation.utils.RndLog;
+
 public class KeyboardListenRelativeLayout extends RelativeLayout {
 	
 	private static final String TAG = KeyboardListenRelativeLayout.class.getSimpleName();
@@ -64,13 +66,13 @@ public class KeyboardListenRelativeLayout extends RelativeLayout {
 
                 int screenHeight = getHeight();
                 int heightDiff = screenHeight - (r.bottom - r.top);
-                Log.d("Keyboard Size", "Size: " + heightDiff);
+                RndLog.d("Keyboard Size", "Size: " + heightDiff);
                 boolean visible = Math.abs(heightDiff) > screenHeight / 3;
                 
                 if(lastStatus!=visible)
                 {
                 	lastStatus = visible;
-                	Log.d("Keyboard", "Keyboard " + (visible?"opened":"closed"));
+					RndLog.d("Keyboard", "Keyboard " + (visible?"opened":"closed"));
 	                if(!visible&&onKeyboardStateChangedListener != null) {
 	    				onKeyboardStateChangedListener.onKeyboardStateChanged(KEYBOARD_STATE_HIDE);
 	    			}

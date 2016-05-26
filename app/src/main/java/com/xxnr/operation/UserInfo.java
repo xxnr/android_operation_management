@@ -7,9 +7,9 @@ import android.content.Intent;
 
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
-import com.xxnr.operation.XUtilsDb.XUtilsDbHelper;
 import com.xxnr.operation.developTools.PreferenceUtil;
 import com.xxnr.operation.developTools.app.App;
+import com.xxnr.operation.modules.LoginActivity;
 import com.xxnr.operation.protocol.bean.LoginResult;
 
 /**

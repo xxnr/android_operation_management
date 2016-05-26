@@ -10,4 +10,8 @@
     <string name="order_manage">订单管理</string>
     <string name="loading">正在加载…</string>
     <string name="amounts">合计：</string>
+    <string name="data_center">数据中心</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
