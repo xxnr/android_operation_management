@@ -4,15 +4,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xxnr.operation.R;
 import com.xxnr.operation.UserInfo;
-import com.xxnr.operation.modules.datacenter.DataCenterActivity;
-import com.xxnr.operation.modules.potential.PotentialCustomerActivity;
-import com.xxnr.operation.modules.customer.CustomerManageActivity;
 import com.xxnr.operation.developTools.app.App;
+import com.xxnr.operation.modules.customer.CustomerManageActivity;
+import com.xxnr.operation.modules.datacenter.DataCenterActivity;
 import com.xxnr.operation.modules.order.OrderManageActivity;
+import com.xxnr.operation.modules.potential.PotentialCustomerActivity;
 import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.protocol.bean.LoginResult;
 import com.xxnr.operation.utils.IntentUtil;
@@ -20,14 +21,19 @@ import com.xxnr.operation.utils.RndLog;
 import com.xxnr.operation.utils.StringUtil;
 import com.xxnr.operation.widget.CustomDialog;
 
+import java.util.List;
+
 /**
- * Created by CAI on 2016/4/22.
+ * Created by 何鹏 on 2016/4/22.
  */
 public class MainActivity extends BaseActivity {
 
 
     private TextView user_name;
     private long backPressTime;
+    private LinearLayout main_user_ll;
+    private LinearLayout main_order_ll;
+    private LinearLayout main_dashboard;
 
 
     //布局文件
@@ -51,17 +57,45 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        setViewClick(R.id.customer_manage_ll);
-        setViewClick(R.id.potential_customer_ll);
-        setViewClick(R.id.order_manage_ll);
-        setViewClick(R.id.data_center_ll);
+        List<String> roleList = UserInfo.getRole(MainActivity.this);
+        if (roleList != null) {
+            if (roleList.contains("users")) {
+                main_user_ll.setVisibility(View.VISIBLE);
+                setViewClick(R.id.customer_manage_ll);
+                setViewClick(R.id.potential_customer_ll);
+            }
+            if (roleList.contains("orders")) {
+                main_order_ll.setVisibility(View.VISIBLE);
+                setViewClick(R.id.order_manage_ll);
+            }
+
+            if (roleList.contains("dashboard")) {
+                main_dashboard.setVisibility(View.VISIBLE);
+                setViewClick(R.id.data_center_ll);
+            }
+        }
+
 
     }
+
+
+
+
+
+
 
 
     private void initView() {
         user_name = (TextView) findViewById(R.id.user_name);
         setViewClick(R.id.login_out);
+
+        main_user_ll = (LinearLayout) findViewById(R.id.main_user_ll);
+        main_order_ll = (LinearLayout) findViewById(R.id.main_order_ll);
+        main_dashboard = (LinearLayout) findViewById(R.id.main_dashboard);
+        main_user_ll.setVisibility(View.GONE);
+        main_order_ll.setVisibility(View.GONE);
+        main_dashboard.setVisibility(View.GONE);
+
     }
 
     @Override

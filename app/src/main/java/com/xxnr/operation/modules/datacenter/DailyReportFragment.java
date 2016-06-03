@@ -1,8 +1,8 @@
 package com.xxnr.operation.modules.datacenter;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -20,15 +20,16 @@ import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.protocol.RequestParams;
 import com.xxnr.operation.protocol.bean.DailyReportResult;
 import com.xxnr.operation.protocol.bean.StatisticReportResult;
+import com.xxnr.operation.utils.BgSelectorUtils;
 import com.xxnr.operation.utils.IntentUtil;
 import com.xxnr.operation.utils.StringUtil;
 
 import java.util.Date;
 
 /**
- * Created by CAI on 2016/5/18.
+ * Created by 何鹏 on 2016/5/18.
  */
-public class DailyReportFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class DailyReportFragment extends BaseFragment {
     private TextView date_picker;
 
     private TextView reg_count_1;
@@ -43,9 +44,9 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
     private TextView order_count_2;
     private TextView order_paid_count_2;
     private TextView pay_price_2;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout statistic_ll;
     private TextView date_after, date_before;
+    private ColorStateList colorStateList;
 
 
     @Override
@@ -56,7 +57,7 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
                     Bundle bundle = new Bundle();
                     bundle.putString("selectDate", date_picker.getText().toString());
                     bundle.putBoolean("isRange", false);
-                    IntentUtil.activityForward(activity, DatePickerActivity.class, bundle, false);
+                    IntentUtil.activityForward(activity, DailyPickerActivity.class, bundle, false);
                 }
                 break;
             case R.id.date_before://前一天
@@ -69,7 +70,6 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
                             return;
                         } else {
                             date_picker.setText(res);
-                            showProgressDialog();
                             getDaily(DataCenterUtils.changeDateFormat(res));
                         }
                     }
@@ -82,11 +82,10 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
                     if (res != null) {
                         if (DataCenterUtils.stringtoDate(res, DataCenterUtils.CHINESE_DATE_FORMAT).getTime()
                                 >= DataCenterUtils.getCurrDate().getTime()) {
-                            showToast("已经是最后第一天");
+                            showToast("已经是最后一天");
                             return;
                         } else {
                             date_picker.setText(res);
-                            showProgressDialog();
                             getDaily(DataCenterUtils.changeDateFormat(res));
                         }
                     }
@@ -96,25 +95,25 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
                 Bundle bundle1 = new Bundle();
                 bundle1.putString("title", "注册用户数");
                 bundle1.putString("dateStr", date_picker.getText().toString());
-                IntentUtil.activityForward(activity, DataDetailActivity.class, bundle1, false);
+                IntentUtil.activityForward(activity, DailyDetailActivity.class, bundle1, false);
                 break;
             case R.id.order_count_ll_1:
                 Bundle bundle2 = new Bundle();
                 bundle2.putString("title", "订单数");
                 bundle2.putString("dateStr", date_picker.getText().toString());
-                IntentUtil.activityForward(activity, DataDetailActivity.class, bundle2, false);
+                IntentUtil.activityForward(activity, DailyDetailActivity.class, bundle2, false);
                 break;
             case R.id.order_paid_count_ll_1:
                 Bundle bundle3 = new Bundle();
                 bundle3.putString("title", "付款订单数");
                 bundle3.putString("dateStr", date_picker.getText().toString());
-                IntentUtil.activityForward(activity, DataDetailActivity.class, bundle3, false);
+                IntentUtil.activityForward(activity, DailyDetailActivity.class, bundle3, false);
                 break;
             case R.id.pay_price_ll_1:
                 Bundle bundle4 = new Bundle();
                 bundle4.putString("title", "已支付金额");
                 bundle4.putString("dateStr", date_picker.getText().toString());
-                IntentUtil.activityForward(activity, DataDetailActivity.class, bundle4, false);
+                IntentUtil.activityForward(activity, DailyDetailActivity.class, bundle4, false);
                 break;
         }
 
@@ -131,10 +130,15 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
         date_picker.setOnClickListener(this);
         date_before.setOnClickListener(this);
         date_after.setOnClickListener(this);
+        //设置selector
+        colorStateList = BgSelectorUtils.createColorStateList(activity.getResources().getColor(R.color.default_black), activity.getResources().getColor(R.color.deep_black));
+        if (colorStateList != null) {
+            date_before.setTextColor(colorStateList);
+            date_after.setTextColor(colorStateList);
+        }
+
 
         statistic_ll = (LinearLayout) view.findViewById(R.id.statistic_ll);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this);
 
         this.reg_count_1 = (TextView) view.findViewById(R.id.reg_count_1);
         this.reg_count_ll_1 = (LinearLayout) view.findViewById(R.id.reg_count_ll_1);
@@ -160,7 +164,7 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
         //默认展示今天的日期
         String today = DataCenterUtils.getCurrDateStr(DataCenterUtils.CHINESE_DATE_FORMAT);
         date_picker.setText(today);
-        date_after.setTextColor(getResources().getColor(R.color.gray));//默认当天不可点击
+        date_after.setTextColor(getResources().getColor(R.color.date_unable));//默认当天不可点击
 
         //如果是今天才展示累计数据
         date_picker.addTextChangedListener(new TextWatcher() {
@@ -178,16 +182,20 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
             public void afterTextChanged(Editable s) {
                 if (s.toString().equals(DataCenterUtils.getCurrDateStr(DataCenterUtils.CHINESE_DATE_FORMAT))) {
                     statistic_ll.setVisibility(View.VISIBLE);
-                    date_after.setTextColor(getResources().getColor(R.color.gray));
+                    date_after.setTextColor(getResources().getColor(R.color.date_unable));
                 } else {
                     statistic_ll.setVisibility(View.GONE);
-                    date_after.setTextColor(getResources().getColor(R.color.deep_black));
+                    if (colorStateList != null) {
+                        date_after.setTextColor(colorStateList);
+                    }
                 }
 
                 if (s.toString().equals(DataCenterUtils.startDateStr)) {
-                    date_before.setTextColor(getResources().getColor(R.color.gray));
+                    date_before.setTextColor(getResources().getColor(R.color.date_unable));
                 } else {
-                    date_before.setTextColor(getResources().getColor(R.color.deep_black));
+                    if (colorStateList != null) {
+                        date_before.setTextColor(colorStateList);
+                    }
 
                 }
             }
@@ -201,7 +209,6 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
                     String dateToString = DataCenterUtils.dateToString((Date) args[0], DataCenterUtils.CHINESE_DATE_FORMAT);
                     if (StringUtil.checkStr(dateToString)) {
                         date_picker.setText(dateToString);
-                        showProgressDialog();
                         getDaily(DataCenterUtils.changeDateFormat(dateToString));
                     }
                 }
@@ -209,7 +216,7 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
         }, MsgID.Date_Select);
 
         //请求数据
-        showProgressDialog();
+
         getDaily(DataCenterUtils.changeDateFormat(date_picker.getText().toString()));
         getStatistic();
 
@@ -218,6 +225,7 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
 
     //获取某一天的数据
     private void getDaily(String date) {
+        showProgressDialog();
         RequestParams params = new RequestParams();
         params.put("token", App.getApp().getToken());
         params.put("date", date);
@@ -236,9 +244,6 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
     @Override
     public void onResponsed(Request req) {
         disMissDialog();
-        if (swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
         if (req.getApi() == ApiType.GET_DAILY_REPORT) {
             DailyReportResult reqData = (DailyReportResult) req.getData();
             reg_count_1.setText(reqData.registeredUserCount + "");
@@ -256,12 +261,5 @@ public class DailyReportFragment extends BaseFragment implements SwipeRefreshLay
 
     }
 
-
-    //下拉刷新
-    @Override
-    public void onRefresh() {
-        getDaily(DataCenterUtils.changeDateFormat(date_picker.getText().toString()));
-        getStatistic();
-    }
 
 }

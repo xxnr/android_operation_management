@@ -56,7 +56,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by CAI on 2016/5/4.
+ * Created by 何鹏 on 2016/5/4.
  */
 public class OrderSearchActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, OrderListAdapter.ItemOnClickListener, OrderListAdapter.ItemOnClickListener1 {
     private ClearEditText rsc_search_edit;
@@ -531,7 +531,7 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshBa
         public void convert(final CommonViewHolder holder, final OfflinePayTypeResult.OfflinePayTypeBean offlinePayTypeEntity) {
             if (offlinePayTypeEntity != null) {
 
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.offline_pay_way_checkBox);
+                final CheckBox checkBox =  holder.getView(R.id.offline_pay_way_checkBox);
                 checkBox.setText(offlinePayTypeEntity.name);
 
                 //如果选中，集合中的值为true 否则为false
@@ -577,7 +577,7 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshBa
 
                 }
 
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_consignees_item);
+                final CheckBox checkBox = holder.getView(R.id.btn_consignees_item);
                 //如果选中，集合中的值为true 否则为false
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -723,7 +723,7 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshBa
                 }
 
                 //附加选项
-                TextView sku_addiction = (TextView) holder.getView(R.id.sku_addiction);
+                TextView sku_addiction =  holder.getView(R.id.sku_addiction);
 
                 StringBuilder stringAdditions = new StringBuilder();
                 if (skus.additions != null && !skus.additions.isEmpty()) {
@@ -746,7 +746,7 @@ public class OrderSearchActivity extends BaseActivity implements PullToRefreshBa
 
 
                 //CheckBox
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_surr_order_item);
+                final CheckBox checkBox =  holder.getView(R.id.btn_surr_order_item);
 
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override

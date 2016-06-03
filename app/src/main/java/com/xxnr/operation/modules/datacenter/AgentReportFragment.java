@@ -24,18 +24,19 @@ import com.xxnr.operation.widget.UnSwipeListView;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/24.
+ * Created by 何鹏 on 2016/5/24.
  */
 public class AgentReportFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener {
     private UnSwipeListView unSwipeListView;
-    private AgentAdapter adapter;
     private UnSwipeListView unSwipeListView_name;
-    private NameAgentAdapter nameAdapter;
     private TextView updateTime;
     private int page = 1;
     private PullToRefreshScrollView refreshScrollView;
     private TitleViewHolder titleViewHolder;
     private String SORT = "";
+
+    private AgentAdapter adapter;
+    private NameAgentAdapter nameAdapter;
 
 
     @Override
@@ -73,7 +74,7 @@ public class AgentReportFragment extends BaseFragment implements PullToRefreshBa
         if (titleViewHolder != null) {
             page = 1;
             showProgressDialog();
-            if (((Boolean) v.getTag())) {
+            if ((v.getTag()) != null && (Boolean) v.getTag()) {
                 titleViewHolder.reset();
                 getData(sort, -1);
                 v.setTag(false);
@@ -131,6 +132,7 @@ public class AgentReportFragment extends BaseFragment implements PullToRefreshBa
         return view;
     }
 
+
     private void getData(String sort, int sortOrder) {
         RequestParams params = new RequestParams();
         params.put("token", App.getApp().getToken());
@@ -168,6 +170,7 @@ public class AgentReportFragment extends BaseFragment implements PullToRefreshBa
             List<AgentReportResult.AgentReportYesterdayBean> agentReportYesterday = reqData.agentReportYesterday;
             if (agentReportYesterday != null && !agentReportYesterday.isEmpty()) {
                 if (page == 1) {
+                    //agent姓名列表
                     if (nameAdapter == null) {
                         nameAdapter = new NameAgentAdapter(activity, agentReportYesterday);
                         unSwipeListView_name.setAdapter(nameAdapter);
@@ -175,7 +178,7 @@ public class AgentReportFragment extends BaseFragment implements PullToRefreshBa
                         nameAdapter.clear();
                         nameAdapter.addAll(agentReportYesterday);
                     }
-
+                    //agent列表
                     if (adapter == null) {
                         adapter = new AgentAdapter(activity, agentReportYesterday);
                         unSwipeListView.setAdapter(adapter);
@@ -185,11 +188,10 @@ public class AgentReportFragment extends BaseFragment implements PullToRefreshBa
                         adapter.addAll(agentReportYesterday);
                     }
                 } else {
-                    if (nameAdapter != null) {
-                        nameAdapter.addAll(agentReportYesterday);
-                    }
-                    if (adapter != null) {
+                    //因集合agentReportYesterday 两个适配器是一个对象 所以只需要add一次
+                    if (adapter != null && nameAdapter != null) {
                         adapter.addAll(agentReportYesterday);
+                        nameAdapter.notifyDataSetChanged();
                     }
                 }
             } else {
@@ -236,7 +238,7 @@ public class AgentReportFragment extends BaseFragment implements PullToRefreshBa
                 holder.setText(R.id.reg_customer_count, agentReportYesterdayBean.newPotentialCustomerCount + "");//昨日登记客户
                 holder.setText(R.id.total_reg_customer_count, agentReportYesterdayBean.totalPotentialCustomerCount + "");//总登记客户
                 holder.setText(R.id.order_count, agentReportYesterdayBean.totalCompletedOrderCount + "");
-                holder.setText(R.id.price_amount, "¥" + StringUtil.toTwoString(agentReportYesterdayBean.totalPaidAmount + ""));
+                holder.setText(R.id.price_amount, StringUtil.toTwoString(agentReportYesterdayBean.totalPaidAmount + ""));
             }
         }
     }
@@ -311,26 +313,26 @@ public class AgentReportFragment extends BaseFragment implements PullToRefreshBa
 
         public void reset() {
             this.title_new_customer_count_icon.setVisibility(View.GONE);
-            this.title_new_customer_count_ll.setTag(false);
+            this.title_new_customer_count_ll.setTag(true);
 
             this.title_total_customer_count_icon.setVisibility(View.GONE);
-            this.title_total_customer_count_ll.setTag(false);
+            this.title_total_customer_count_ll.setTag(true);
 
 
             this.title_reg_customer_count_icon.setVisibility(View.GONE);
-            this.title_reg_customer_count_ll.setTag(false);
+            this.title_reg_customer_count_ll.setTag(true);
 
 
             this.title_total_reg_customer_count_icon.setVisibility(View.GONE);
-            this.title_total_reg_customer_count_ll.setTag(false);
+            this.title_total_reg_customer_count_ll.setTag(true);
 
 
             this.title_order_count_icon.setVisibility(View.GONE);
-            this.title_order_count_ll.setTag(false);
+            this.title_order_count_ll.setTag(true);
 
 
             this.title_price_amount_icon.setVisibility(View.GONE);
-            this.title_price_amount_ll.setTag(false);
+            this.title_price_amount_ll.setTag(true);
 
         }
 

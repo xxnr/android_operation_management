@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".RndApplication"
@@ -25,13 +26,13 @@
         </activity>
         <!--主页-->
         <activity
-            android:theme="@style/MainActivityTheme"
             android:name=".modules.MainActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:theme="@style/MainActivityTheme" />
         <!--登录页-->
         <activity
-            android:theme="@style/MainActivityTheme"
             android:name=".modules.LoginActivity"
+            android:theme="@style/MainActivityTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <!--客户管理-->
         <activity android:name=".modules.customer.CustomerManageActivity" />
@@ -62,11 +63,21 @@
         <!--数据详情-->
         <activity android:name=".modules.datacenter.DataCenterActivity" />
         <!--选择日期-->
-        <activity android:name=".modules.datacenter.DatePickerActivity" />
-        <!--数据中心：数据详情-->
-        <activity android:name=".modules.datacenter.DataDetailActivity" />
+        <activity android:name=".modules.datacenter.DailyPickerActivity" />
+        <!--数据中心：日：数据详情-->
+        <activity android:name=".modules.datacenter.DailyDetailActivity" />
         <!--选择日期：月-->
         <activity android:name=".modules.datacenter.WeekPickerActivity" />
+        <!--选择日期：月：数据详情-->
+        <activity android:name=".modules.datacenter.WeekDetailActivity" />
+
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="57511e5767e58e5a490010c2" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="XXNR" />
 
     </application>
 

@@ -45,14 +45,13 @@ import com.xxnr.operation.widget.UnSwipeGridView;
 import com.xxnr.operation.widget.UnSwipeListView;
 import com.xxnr.operation.widget.WidgetUtil;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by CAI on 2016/5/6.
+ * Created by 何鹏 on 2016/5/6.
  */
 public class OrderDetailActivity extends BaseActivity {
     private TextView name_phone_tv, order_detail_address_tv, order_tv, pay_state_tv,
@@ -498,7 +497,7 @@ public class OrderDetailActivity extends BaseActivity {
             if (subOrder != null) {
 
                 //支付阶段
-                TextView item_payInfo_step = ((TextView) holder.getView(R.id.item_payInfo_step));
+                TextView item_payInfo_step = ( holder.getView(R.id.item_payInfo_step));
                 switch (subOrder.type) {
                     case "deposit":
                         item_payInfo_step.setText("阶段一：订金");
@@ -512,7 +511,7 @@ public class OrderDetailActivity extends BaseActivity {
                 }
 
                 //支付状态
-                TextView item_payInfo_type = (TextView) holder.getView(R.id.item_payInfo_type);
+                TextView item_payInfo_type =  holder.getView(R.id.item_payInfo_type);
                 if (orderType != 0) { //如果交易状态 是已关闭 下方设置已关闭
                     if (subOrder.type.equals("balance")) {//阶段二的子订单
                         try {
@@ -581,14 +580,14 @@ public class OrderDetailActivity extends BaseActivity {
                 //已支付金额
                 holder.setText(R.id.order_yet_price, "¥" + StringUtil.toTwoString(subOrder.paidPrice + ""));
                 //查看详情
-                TextView to_get_pay_detail = (TextView) holder.getView(R.id.to_get_pay_detail);
+                TextView to_get_pay_detail =  holder.getView(R.id.to_get_pay_detail);
                 if (subOrder.payStatus == 2 || subOrder.payStatus == 3) {
                     to_get_pay_detail.setVisibility(View.VISIBLE);
                     to_get_pay_detail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Bundle bundle = new Bundle();
-                            bundle.putSerializable("payInfo", (Serializable) subOrder);
+                            bundle.putSerializable("payInfo",  subOrder);
                             bundle.putString("orderId", orderId);
                             IntentUtil.activityForward(OrderDetailActivity.this, OrderPayDetailActivity.class, bundle, false);
                         }
@@ -968,7 +967,7 @@ public class OrderDetailActivity extends BaseActivity {
         public void convert(final CommonViewHolder holder, final OfflinePayTypeResult.OfflinePayTypeBean offlinePayTypeEntity) {
             if (offlinePayTypeEntity != null) {
 
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.offline_pay_way_checkBox);
+                final CheckBox checkBox =  holder.getView(R.id.offline_pay_way_checkBox);
                 checkBox.setText(offlinePayTypeEntity.name);
 
                 //如果选中，集合中的值为true 否则为false
@@ -1013,7 +1012,7 @@ public class OrderDetailActivity extends BaseActivity {
                     holder.setText(R.id.spinner_text, "");
                 }
 
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_consignees_item);
+                final CheckBox checkBox =  holder.getView(R.id.btn_consignees_item);
                 //如果选中，集合中的值为true 否则为false
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1149,7 +1148,7 @@ public class OrderDetailActivity extends BaseActivity {
                 }
 
                 //附加选项
-                TextView sku_addiction = (TextView) holder.getView(R.id.sku_addiction);
+                TextView sku_addiction = holder.getView(R.id.sku_addiction);
 
                 StringBuilder stringAdditions = new StringBuilder();
                 if (skus.additions != null && !skus.additions.isEmpty()) {
@@ -1172,7 +1171,7 @@ public class OrderDetailActivity extends BaseActivity {
 
 
                 //CheckBox
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_surr_order_item);
+                final CheckBox checkBox =  holder.getView(R.id.btn_surr_order_item);
 
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override

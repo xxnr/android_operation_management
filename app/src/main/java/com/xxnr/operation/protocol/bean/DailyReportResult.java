@@ -3,7 +3,7 @@ package com.xxnr.operation.protocol.bean;
 import com.xxnr.operation.protocol.ResponseResult;
 
 /**
- * Created by CAI on 2016/5/19.
+ * Created by 何鹏 on 2016/5/19.
  */
 public class DailyReportResult extends ResponseResult {
 

@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by CAI on 2016/5/3.
+ * Created by 何鹏 on 2016/5/3.
  */
 public class CustomerDetailActivity extends BaseActivity {
     private TextView customer_detail_phone;
@@ -201,7 +201,7 @@ public class CustomerDetailActivity extends BaseActivity {
                         approve_county_customer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                List<Object> list = new ArrayList<Object>();
+                                List<Object> list = new ArrayList<>();
                                 if (user.isXXNRAgent) {
                                     list.add("6");
                                 }
@@ -221,7 +221,7 @@ public class CustomerDetailActivity extends BaseActivity {
                         approve_county_customer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                List<Object> list = new ArrayList<Object>();
+                                List<Object> list = new ArrayList<>();
                                 if (user.isXXNRAgent) {
                                     list.add("6");
                                 }
@@ -237,7 +237,7 @@ public class CustomerDetailActivity extends BaseActivity {
                         approve_customer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                List<Object> list = new ArrayList<Object>();
+                                List<Object> list = new ArrayList<>();
                                 if (user.isRSC) {
                                     list.add("5");
                                 }
@@ -256,7 +256,7 @@ public class CustomerDetailActivity extends BaseActivity {
                         approve_customer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                List<Object> list = new ArrayList<Object>();
+                                List<Object> list = new ArrayList<>();
                                 if (user.isRSC) {
                                     list.add("5");
                                 }

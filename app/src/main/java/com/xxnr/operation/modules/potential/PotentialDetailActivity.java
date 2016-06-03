@@ -18,7 +18,7 @@ import com.xxnr.operation.utils.StringUtil;
 
 
 /**
- * Created by CAI on 2016/5/3.
+ * Created by 何鹏 on 2016/5/3.
  */
 public class PotentialDetailActivity extends BaseActivity {
     private TextView customer_detail_phone;

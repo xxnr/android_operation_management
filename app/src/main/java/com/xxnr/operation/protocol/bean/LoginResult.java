@@ -5,6 +5,8 @@ import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
 import com.xxnr.operation.protocol.ResponseResult;
 
+import java.util.List;
+
 /**
  * Created by hehuanyu on 2016/4/28.
  */
@@ -31,21 +33,24 @@ public class LoginResult extends ResponseResult {
     public static class DatasBean {
         @Id
         public String _id;
-        @Column(column="account")
+        @Column(column = "account")
         public String account;
-        @Column(column="password")
+        @Column(column = "password")
         public String password;
-        @Column(column="role")
-        public String role;
-        @Column(column="business")
-        public String business;
-        @Column(column="__v")
+        public Role role;
+        @Column(column = "__v")
         public int __v;
-        @Column(column="webLoginId")
+        @Column(column = "webLoginId")
         public String webLoginId;
-        @Column(column="dateCreated")
+        @Column(column = "dateCreated")
         public String dateCreated;
 
+    }
+
+    public static class Role {
+        public String _id;
+        public String name;
+        public List<String> view_roles;
 
     }
 }

@@ -17,7 +17,7 @@ import com.xxnr.operation.utils.StringUtil;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/4.
+ * Created by 何鹏 on 2016/5/4.
  */
 public class PotentialListAdapter extends CommonAdapter<PotentialListResult.PotentialCustomersBean> {
     private Context context;

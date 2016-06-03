@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.xxnr.operation.modules.BaseFragment;
 import com.xxnr.operation.MsgID;
 import com.xxnr.operation.R;
@@ -48,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by CAI on 2016/5/5.
+ * Created by 何鹏 on 2016/5/5.
  */
 public class OrderListFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2, OrderListAdapter.ItemOnClickListener, OrderListAdapter.ItemOnClickListener1 {
 
@@ -474,7 +473,7 @@ public class OrderListFragment extends BaseFragment implements PullToRefreshBase
         public void convert(final CommonViewHolder holder, final OfflinePayTypeResult.OfflinePayTypeBean offlinePayTypeEntity) {
             if (offlinePayTypeEntity != null) {
 
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.offline_pay_way_checkBox);
+                final CheckBox checkBox =  holder.getView(R.id.offline_pay_way_checkBox);
                 checkBox.setText(offlinePayTypeEntity.name);
 
                 //如果选中，集合中的值为true 否则为false
@@ -520,7 +519,7 @@ public class OrderListFragment extends BaseFragment implements PullToRefreshBase
 
                 }
 
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_consignees_item);
+                final CheckBox checkBox =  holder.getView(R.id.btn_consignees_item);
                 //如果选中，集合中的值为true 否则为false
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -666,7 +665,7 @@ public class OrderListFragment extends BaseFragment implements PullToRefreshBase
                 }
 
                 //附加选项
-                TextView sku_addiction = (TextView) holder.getView(R.id.sku_addiction);
+                TextView sku_addiction =  holder.getView(R.id.sku_addiction);
 
                 StringBuilder stringAdditions = new StringBuilder();
                 if (skus.additions != null && !skus.additions.isEmpty()) {
@@ -689,7 +688,7 @@ public class OrderListFragment extends BaseFragment implements PullToRefreshBase
 
 
                 //CheckBox
-                final CheckBox checkBox = (CheckBox) holder.getView(R.id.btn_surr_order_item);
+                final CheckBox checkBox = holder.getView(R.id.btn_surr_order_item);
 
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override

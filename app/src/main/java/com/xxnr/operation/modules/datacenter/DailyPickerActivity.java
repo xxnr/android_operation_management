@@ -2,13 +2,11 @@ package com.xxnr.operation.modules.datacenter;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.squareup.timessquare.CalendarPickerView;
 import com.xxnr.operation.MsgID;
 import com.xxnr.operation.R;
-import com.xxnr.operation.developTools.DateUtil;
 import com.xxnr.operation.developTools.msg.MsgCenter;
 import com.xxnr.operation.modules.BaseActivity;
 import com.xxnr.operation.protocol.Request;
@@ -16,15 +14,14 @@ import com.xxnr.operation.protocol.Request;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/18.
+ * Created by 何鹏 on 2016/5/18.
  */
-public class DatePickerActivity extends BaseActivity {
+public class DailyPickerActivity extends BaseActivity {
     private boolean isRange = false;
 
 
@@ -56,14 +53,17 @@ public class DatePickerActivity extends BaseActivity {
                 public void onDateSelected(Date date) {
                     if (isRange) {
                         List<Date> selectedDates = pickerView.getSelectedDates();
-                        if (selectedDates != null) {
+                        if (selectedDates != null&&!selectedDates.isEmpty()) {
                             if (selectedDates.size() > 7) {
-                                showToast("最多选择7天");
+                                showToast("不能大于7天");
                                 Date dateStart = selectedDates.get(0);//保存第一个
                                 pickerView.reset();
                                 pickerView.selectDate(dateStart);
                             } else if (selectedDates.size() == 1) {
                                 showToast("请再选择一个日期");
+                                Date dateStart = selectedDates.get(0);//保存第一个
+                                pickerView.reset();
+                                pickerView.selectDate(dateStart);
                             } else {
                                 MsgCenter.fireNull(MsgID.Date_Select_Range, selectedDates);
                                 finish();

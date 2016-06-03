@@ -18,7 +18,7 @@ import com.xxnr.operation.utils.StringUtil;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/4.
+ * Created by 何鹏 on 2016/5/4.
  */
 public class CustomerListAdapter extends CommonAdapter<CustomerListResult.Users.ItemsBean> {
     private Context context;
@@ -49,7 +49,6 @@ public class CustomerListAdapter extends CommonAdapter<CustomerListResult.Users.
                 sex_iv.setImageResource(R.mipmap.girl_icon);
             } else {
                 sex_iv.setImageResource(R.mipmap.boy_icon);
-
             }
 
             if (StringUtil.checkStr(itemsBean.datecreated)) {

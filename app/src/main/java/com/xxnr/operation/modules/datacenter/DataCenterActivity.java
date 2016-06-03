@@ -4,11 +4,10 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.xxnr.operation.R;
 import com.xxnr.operation.developTools.PreferenceUtil;
@@ -19,7 +18,7 @@ import com.xxnr.operation.widget.UnSwipeViewPager;
 import java.util.ArrayList;
 
 /**
- * Created by CAI on 2016/5/18.
+ * Created by 何鹏 on 2016/5/18.
  */
 public class DataCenterActivity extends BaseActivity {
     private ArrayList<String> titleList = new ArrayList<>();
@@ -53,9 +52,10 @@ public class DataCenterActivity extends BaseActivity {
 
     private void initView() {
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
-
         pop_bg.setVisibility(View.GONE);
-        UnSwipeViewPager viewPager = (UnSwipeViewPager) findViewById(R.id.viewPager);
+
+
+        UnSwipeViewPager viewPager= (UnSwipeViewPager) findViewById(R.id.viewPager);
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager.setScanScroll(false);
         initTabs();
@@ -64,7 +64,7 @@ public class DataCenterActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager.setAdapter(new DataCenterAdapter(fragmentManager, titleList));
         mTabLayout.setupWithViewPager(viewPager);//设置联动
-
+        viewPager.setOffscreenPageLimit(titleList.size());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -79,6 +79,13 @@ public class DataCenterActivity extends BaseActivity {
                     boolean isFirst = pu.getBool("first_agent", true);
                     if (isFirst) {
                         pop_bg.setVisibility(View.VISIBLE);
+                        pop_bg.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                pop_bg.setVisibility(View.GONE);
+                                return false;
+                            }
+                        });
                     }
                     pu.putBool("first_agent", false);
                 }

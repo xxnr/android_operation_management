@@ -43,7 +43,7 @@ public final class ServerInterface {
                 if (responseBody != null) {
                     try {
                         String json = responseBody.string();
-                        RndLog.d(TAG, "request. json.length = " + json);
+                        RndLog.d(TAG, "response. json.length = " + json);
                         return parseJson(json, getJsonClassByApi(api));
                     } catch (Exception e) {
                         e.printStackTrace();

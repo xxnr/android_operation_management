@@ -1,12 +1,13 @@
 package com.xxnr.operation.modules.datacenter;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * Created by CAI on 2016/5/25.
+ * Created by 何鹏 on 2016/5/25.
  */
-public class WeekBean {
+public class WeekBean implements Serializable{
+
     public int indexOfYear;//本年的第几周
     public int Year;//那一年
     public Date dateBegin;//本周有的天

@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/5.
+ * Created by 何鹏 on 2016/5/5.
  */
 public class OrderListResult extends ResponseResult {
 

@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.xxnr.operation.modules.BaseActivity;
 import com.xxnr.operation.R;
 import com.xxnr.operation.developTools.app.App;
@@ -20,7 +19,7 @@ import com.xxnr.operation.utils.PullToRefreshUtils;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/4.
+ * Created by 何鹏 on 2016/5/4.
  */
 public class PotentialCustomerActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
     private PullToRefreshListView listView;

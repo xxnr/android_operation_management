@@ -16,6 +16,10 @@ public interface MsgID {
     String select_tab = "select_tab";//选中tab
     String Date_Select = "Date_Select";//选中日期
     String Date_Select_Range = "Date_Select_Range";//选中日期区间
+    String Week_Select = "Week_Select";//选中周期
+    String Week_Range_Select = "Week_Range_Select";//选中周期区间
+
+
 
 
 

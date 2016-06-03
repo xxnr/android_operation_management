@@ -14,7 +14,7 @@ import com.xxnr.operation.utils.IntentUtil;
 import java.util.ArrayList;
 
 /**
- * Created by CAI on 2016/5/3.
+ * Created by 何鹏 on 2016/5/3.
  */
 public class CustomerManageActivity extends BaseActivity {
     private ArrayList<String> titleList = new ArrayList<>();
@@ -49,6 +49,8 @@ public class CustomerManageActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager.setAdapter(new CustomerPagerAdapter(fragmentManager, titleList));
         mTabLayout.setupWithViewPager(viewPager);//设置联动
+        viewPager.setOffscreenPageLimit(titleList.size());
+
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.xxnr.operation.protocol;
 
 
 import com.xxnr.operation.protocol.bean.AgentReportResult;
-import com.xxnr.operation.protocol.bean.CurrentWeekReportResult;
+import com.xxnr.operation.protocol.bean.EveryWeekReportResult;
 import com.xxnr.operation.protocol.bean.CustomerDetailResult;
 import com.xxnr.operation.protocol.bean.CustomerListResult;
 import com.xxnr.operation.protocol.bean.DailyReportResult;
@@ -15,6 +15,7 @@ import com.xxnr.operation.protocol.bean.RscInfoResult;
 import com.xxnr.operation.protocol.bean.LoginResult;
 import com.xxnr.operation.protocol.bean.OfflineStateListResult;
 import com.xxnr.operation.protocol.bean.OrderDetailResult;
+import com.xxnr.operation.protocol.bean.SomeWeekReportResult;
 import com.xxnr.operation.protocol.bean.StatisticReportResult;
 import com.xxnr.operation.protocol.bean.WeekReportResult;
 
@@ -37,8 +38,6 @@ public enum ApiType {
      * 客户管理列表
      */
     GET_USERS_LIST("/manager/api/users", CustomerListResult.class),
-
-
     /**
      * 客户详情
      */
@@ -110,14 +109,18 @@ public enum ApiType {
     GET_AGENT_RANK("/manager/api/dashboard/queryAgentReportYesterday", AgentReportResult.class),
 
     /**
-     * 数据中心：获得本周数据
+     * 数据中心：获得一周数据
      */
-    GET_CURRENT_WEEK("/manager/api/dashboard/getWeeklyReport", CurrentWeekReportResult.class),
+    GET_EVERY_WEEK_REPORT("/manager/api/dashboard/getWeeklyReport", EveryWeekReportResult.class),
+    /**
+     * 数据中心：获得几周数据
+     */
+    GET_SOME_WEEK_REPORT("/manager/api/dashboard/queryWeeklyReport", SomeWeekReportResult.class),
 
     TEST("", ResponseResult.class);
 
-        private static String server_url = "http://101.200.194.203";
-//    private static String server_url = "http://api.xinxinnongren.com";
+//    private static String server_url = "http://101.200.194.203";
+    private static String server_url = "http://www.xinxinnongren.com";
 
 
     public static final String url = server_url;
@@ -136,17 +139,17 @@ public enum ApiType {
         return this;
     }
 
-    private ApiType(String opt, Class<? extends ResponseResult> clazz) {
+    ApiType(String opt, Class<? extends ResponseResult> clazz) {
         this.opt = opt;
         this.clazz = clazz;
     }
 
-    private ApiType(String opt, RequestMethod requestMethod) {
+    ApiType(String opt, RequestMethod requestMethod) {
         this.opt = opt;
         this.requestMethod = requestMethod;
     }
 
-    private ApiType(String opt, RequestMethod requestMethod, int retryNumber) {
+    ApiType(String opt, RequestMethod requestMethod, int retryNumber) {
         this.opt = opt;
         this.requestMethod = requestMethod;
         this.retryNumber = retryNumber;

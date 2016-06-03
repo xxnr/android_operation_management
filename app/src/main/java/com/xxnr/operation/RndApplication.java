@@ -3,9 +3,9 @@ package com.xxnr.operation;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.view.Gravity;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xxnr.operation.developTools.app.App;
 import com.xxnr.operation.utils.CrashHandler;
 import com.xxnr.operation.utils.StringUtil;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/4/21.
+ * Created by 何鹏 on 2016/4/21.
  */
 public class RndApplication extends Application {
     private static final String TAG = "RndApplication";
@@ -27,7 +27,6 @@ public class RndApplication extends Application {
     // login user name
     private String uid = "";
     private String token = "";
-    private String pwd = "";
 
 
     @Override
@@ -41,13 +40,16 @@ public class RndApplication extends Application {
         CrashHandler.getInstance().init(this);
         //初始化全局的uid token
         String uid = UserInfo.getUid(this);
-        if (StringUtil.checkStr(uid)){
+        if (StringUtil.checkStr(uid)) {
             setUid(uid);
         }
         String token = UserInfo.getToken(this);
-        if (StringUtil.checkStr(token)){
+        if (StringUtil.checkStr(token)) {
             setToken(token);
         }
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        MobclickAgent.setDebugMode(false);
+
     }
 
 
@@ -89,7 +91,7 @@ public class RndApplication extends Application {
     }
 
 
-    //设置全局的用户名和密码
+    //设置全局的UID和token
     public void setUid(String uid) {
         this.uid = uid;
     }
@@ -106,15 +108,6 @@ public class RndApplication extends Application {
 
     public String getToken() {
         return token;
-    }
-
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public String getPwd() {
-        return this.pwd;
     }
 
 

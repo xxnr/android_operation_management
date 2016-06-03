@@ -134,8 +134,9 @@
                 android:id="@+id/title_price_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxEms="3"
-                android:text="已完成金额"
+                android:lines="2"
+                android:maxEms="4"
+                android:text="已完成金额(元)"
                 android:textSize="14sp" />
 
             <ImageView

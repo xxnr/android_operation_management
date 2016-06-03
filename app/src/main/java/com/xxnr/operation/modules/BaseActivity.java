@@ -7,7 +7,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.umeng.analytics.MobclickAgent;
 import com.xxnr.operation.R;
 import com.xxnr.operation.RndApplication;
 import com.xxnr.operation.UserInfo;
@@ -415,11 +415,26 @@ public abstract class BaseActivity extends SwipeBackActivity implements
     }
 
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         RndApplication.unDestroyActivityList.remove(this);
     }
+
+
 
 
 }

@@ -31,7 +31,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by CAI on 2016/5/4.
+ * Created by 何鹏 on 2016/5/4.
  */
 public class PotentialSearchActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
     private ClearEditText rsc_search_edit;

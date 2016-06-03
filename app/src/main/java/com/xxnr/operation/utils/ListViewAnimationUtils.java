@@ -6,7 +6,7 @@ import android.widget.ListView;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 /**
- * Created by CAI on 2016/5/23.
+ * Created by 何鹏 on 2016/5/23.
  */
 public class ListViewAnimationUtils {
     public static final int Short_Delay_Millis=100;

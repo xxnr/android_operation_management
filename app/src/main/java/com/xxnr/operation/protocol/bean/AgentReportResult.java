@@ -5,7 +5,7 @@ import com.xxnr.operation.protocol.ResponseResult;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/25.
+ * Created by 何鹏 on 2016/5/25.
  */
 public class AgentReportResult extends ResponseResult {
 

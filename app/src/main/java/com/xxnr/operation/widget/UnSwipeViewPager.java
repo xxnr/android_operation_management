@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 /**
- * Created by CAI on 2016/4/5.
+ * Created by 何鹏 on 2016/4/5.
  */
 public class UnSwipeViewPager extends ViewPager {
     private boolean isCanScroll = true;

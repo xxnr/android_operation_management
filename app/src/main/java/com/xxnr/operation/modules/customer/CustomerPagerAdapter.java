@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 /**
- * Created by CAI on 2016/5/3.
+ * Created by 何鹏 on 2016/5/3.
  */
 public class CustomerPagerAdapter extends FragmentPagerAdapter {
 

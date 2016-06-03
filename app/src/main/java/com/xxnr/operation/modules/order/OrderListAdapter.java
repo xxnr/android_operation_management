@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/5.
+ * Created by 何鹏 on 2016/5/5.
  */
 public class OrderListAdapter extends CommonAdapter<OrderListResult.DatasBean.ItemsBean> {
     private static final String TAG = OrderListAdapter.class.getSimpleName();

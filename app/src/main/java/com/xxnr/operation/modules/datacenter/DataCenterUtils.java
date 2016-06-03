@@ -1,8 +1,7 @@
 package com.xxnr.operation.modules.datacenter;
 
-import android.util.Log;
 
-import com.xxnr.operation.developTools.DateUtil;
+import com.xxnr.operation.utils.RndLog;
 import com.xxnr.operation.utils.StringUtil;
 
 import java.text.ParseException;
@@ -12,19 +11,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.Locale;
 
 /**
- * Created by CAI on 2016/5/24.
+ * Created by 何鹏 on 2016/5/24.
  */
 public class DataCenterUtils {
-    public static final String startDateStr = "2015年11月01日";
+    public static final String startDateStr = "2015年11月17日";
     // 格式：年－月－日
     public static final String CHINESE_DATE_FORMAT = "yyyy年MM月dd日";
     // 格式：年－月－日
     public static final String UNDERLINE_DATE_FORMAT = "yyyy-MM-dd";
     // 格式：年－月－日
     public static final String SHORT_DATE_FORMAT = "MM月dd日";
+    // 格式：年－月－日
+    public static final String UN_SEPARATOR_SHORT_DATE_FORMAT = "yyyyMMdd";
 
     public static final long ONE_DAT_TIME = 24 * 60 * 60 * 1000;
 
@@ -47,7 +48,7 @@ public class DataCenterUtils {
      * 把符合日期格式的字符串转换为日期类型
      */
     public static Date stringtoDate(String dateStr, String format) {
-        Date d = null;
+        Date d;
         SimpleDateFormat formater = new SimpleDateFormat(format);
         try {
             formater.setLenient(false);
@@ -133,7 +134,7 @@ public class DataCenterUtils {
      ****************************************/
     public static int getWeekNumOfYear(Date date) {
 
-        Calendar c = new GregorianCalendar();
+        Calendar c = new GregorianCalendar(Locale.CHINA);
         c.setFirstDayOfWeek(Calendar.MONDAY);
         c.setMinimalDaysInFirstWeek(4);
         c.setTime(date);
@@ -148,7 +149,9 @@ public class DataCenterUtils {
      * @return int
      */
     public static int getYear(Date date) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(Locale.CHINA);
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.setMinimalDaysInFirstWeek(4);
         calendar.setTime(date);
         return calendar.get(Calendar.YEAR);
     }
@@ -158,29 +161,58 @@ public class DataCenterUtils {
      * 计算某年某周的结束日期
      */
     public static Date getYearWeekEndDay(Date date) {
-        Log.d("DataCenterUtils", "前:" + DataCenterUtils.dateToString(date, CHINESE_DATE_FORMAT));
-        Calendar c = new GregorianCalendar();
+        Calendar c = new GregorianCalendar(Locale.CHINA);
         c.setFirstDayOfWeek(Calendar.MONDAY);
         c.setTime(date);
         c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        Log.d("DataCenterUtils", "后:" + DataCenterUtils.dateToString(c.getTime(), CHINESE_DATE_FORMAT));
         return c.getTime();
     }
 
 
     /**
-     * 计算某年某周的开始日期
+     * 初始化周列表
      */
-    public static Date getYearWeekBeginDay(Date date) {
+    public static List<WeekBean> getWeekList() {
 
-        Log.d("DataCenterUtils", "前:" + DataCenterUtils.dateToString(date, CHINESE_DATE_FORMAT));
-        Calendar c = new GregorianCalendar();
-        c.setFirstDayOfWeek(Calendar.MONDAY);
-        c.setTime(date);
-        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        Log.d("DataCenterUtils", "后:" + DataCenterUtils.dateToString(c.getTime(), CHINESE_DATE_FORMAT));
-        return c.getTime();
+        Calendar calendarStart = Calendar.getInstance();//开始时间
+        Calendar calendarEnd = Calendar.getInstance();//结束时间
+        calendarStart.setTime(stringtoDate(startDateStr, CHINESE_DATE_FORMAT));//2015-11-1
+        calendarEnd.setTime(getCurrDate());
 
+        List<Date> returnList = new ArrayList<>();
+
+        while (calendarStart.compareTo(calendarEnd) < 1) {
+            returnList.add(calendarStart.getTime());
+            calendarStart.add(Calendar.DATE, 1);//每次循环增加一天
+        }
+
+        List<WeekBean> weekBeanList = new ArrayList<>();
+        int weekNumOfYearOld = -1;
+
+        for (Date key : returnList) {
+            int weekNumOfYear = getWeekNumOfYear(key);
+            if (weekNumOfYear != weekNumOfYearOld) {
+                WeekBean weekBean = new WeekBean();
+                weekBean.indexOfYear = weekNumOfYear;
+                weekBean.dateBegin = key;
+                Date WeekEndDay = getYearWeekEndDay(key);
+                if (WeekEndDay.getTime() > getCurrDate().getTime()) {
+                    weekBean.dateEnd = getCurrDate();
+                } else {
+                    weekBean.dateEnd = getYearWeekEndDay(key);
+                }
+                weekBean.Year = getYear(key);
+                weekBeanList.add(weekBean);
+            }
+            weekNumOfYearOld = weekNumOfYear;
+        }
+        for (WeekBean key : weekBeanList) {
+            RndLog.d("WeekReportFragment", key.Year + "年" + key.indexOfYear + "周(" +
+                    dateToString(key.dateBegin, SHORT_DATE_FORMAT)
+                    + "-" + dateToString(key.dateEnd, SHORT_DATE_FORMAT) + ")");
+        }
+
+        return weekBeanList;
     }
 
 

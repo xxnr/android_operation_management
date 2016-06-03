@@ -172,4 +172,28 @@
      -keep class  com.squareup.timessquare.** { *;}
      #Xutils
     -keep class com.lidroid.** { *; }
+    #hellochart-library
+    -dontwarn  lecho.lib.hellocharts.**
+    -keep class  lecho.lib.hellocharts.** { *;}
+    #SwipeBack
+    -dontwarn   me.imid.swipebacklayout.lib.**
+    -keep class   me.imid.swipebacklayout.lib.** { *;}
+    #pulltoreflash
+    -dontwarn com.handmark.pulltorefresh.library.**
+    -keep class com.handmark.pulltorefresh.library.** { *;}
+    -dontwarn com.handmark.pulltorefresh.library.extras.**
+    -keep class com.handmark.pulltorefresh.library.extras.** { *;}
+    -dontwarn com.handmark.pulltorefresh.library.internal.**
+    -keep class com.handmark.pulltorefresh.library.internal.** { *;}
+
+    -keepclassmembers class * {
+       public <init> (org.json.JSONObject);
+    }
+    -keep public class com.xxnr.operation.R$*{
+        public static final int *;
+    }
+
+
+
+
 

@@ -1,6 +1,5 @@
 package com.xxnr.operation.modules.datacenter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,10 +7,9 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import okhttp3.Request;
 
 /**
- * Created by CAI on 2016/5/18.
+ * Created by 何鹏 on 2016/5/18.
  */
 public class DataCenterAdapter extends FragmentPagerAdapter {
 

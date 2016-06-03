@@ -18,7 +18,7 @@ import com.xxnr.operation.utils.PopWindowUtils;
 import java.util.ArrayList;
 
 /**
- * Created by CAI on 2016/5/5.
+ * Created by 何鹏 on 2016/5/5.
  */
 public class OrderManageActivity extends BaseActivity implements OrderListFragment.BgSwitch {
     private ArrayList<String> titleList = new ArrayList<>();
@@ -62,7 +62,7 @@ public class OrderManageActivity extends BaseActivity implements OrderListFragme
         fragmentManager = getSupportFragmentManager();
         viewPager.setAdapter(new OrderListPagerAdapter(fragmentManager, titleList));
         mTabLayout.setupWithViewPager(viewPager);//设置联动
-
+        viewPager.setOffscreenPageLimit(titleList.size());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

@@ -5,7 +5,7 @@ import com.xxnr.operation.protocol.ResponseResult;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/19.
+ * Created by 何鹏 on 2016/5/19.
  */
 public class WeekReportResult extends ResponseResult {
 

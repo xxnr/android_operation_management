@@ -10,7 +10,7 @@ import com.xxnr.operation.protocol.bean.LoginResult;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/4/12.
+ * Created by 何鹏 on 2016/4/12.
  */
 public class XUtilsDbHelper {
     // dbUtils实例
@@ -64,7 +64,6 @@ public class XUtilsDbHelper {
 
 
     }
-
 
 
     public static void deleteAll(DbUtils dbUtils, Class aClass) {

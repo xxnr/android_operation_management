@@ -230,7 +230,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="3dp"
-                android:text="确定"
+                android:text="@string/sure"
                 android:textColor="@color/white" />
 
         </RelativeLayout>

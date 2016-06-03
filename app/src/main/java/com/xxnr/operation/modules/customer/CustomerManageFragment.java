@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.xxnr.operation.modules.BaseFragment;
 import com.xxnr.operation.MsgID;
 import com.xxnr.operation.R;
@@ -22,7 +21,7 @@ import com.xxnr.operation.utils.PullToRefreshUtils;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/3.
+ * Created by 何鹏 on 2016/5/3.
  */
 public class CustomerManageFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2 {
     private PullToRefreshListView listView;

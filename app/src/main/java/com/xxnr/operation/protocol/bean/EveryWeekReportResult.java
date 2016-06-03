@@ -3,9 +3,9 @@ package com.xxnr.operation.protocol.bean;
 import com.xxnr.operation.protocol.ResponseResult;
 
 /**
- * Created by CAI on 2016/5/26.
+ * Created by 何鹏 on 2016/5/26.
  */
-public class CurrentWeekReportResult extends ResponseResult {
+public class EveryWeekReportResult extends ResponseResult {
 
 
     /**

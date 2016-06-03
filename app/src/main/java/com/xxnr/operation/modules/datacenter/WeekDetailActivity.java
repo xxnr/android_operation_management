@@ -18,7 +18,7 @@ import com.xxnr.operation.modules.CommonViewHolder;
 import com.xxnr.operation.protocol.ApiType;
 import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.protocol.RequestParams;
-import com.xxnr.operation.protocol.bean.WeekReportResult;
+import com.xxnr.operation.protocol.bean.SomeWeekReportResult;
 import com.xxnr.operation.utils.IntentUtil;
 import com.xxnr.operation.utils.StringUtil;
 import com.xxnr.operation.widget.UnSwipeListView;
@@ -36,9 +36,9 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 /**
- * Created by CAI on 2016/5/23.
+ * Created by 何鹏 on 2016/5/23.
  */
-public class DataDetailActivity extends BaseActivity {
+public class WeekDetailActivity extends BaseActivity {
     private ColumnChartView chart;
     private TextView date_tv;
     private String title;
@@ -49,10 +49,13 @@ public class DataDetailActivity extends BaseActivity {
     private String endDateStr;
     private String startStr;
 
+    private int startIndex = -1;
+    private int endIndex = -1;
+
 
     @Override
     public int getLayout() {
-        return R.layout.activity_data_detail;
+        return R.layout.activity_data_week_detail;
     }
 
     @SuppressLint("SetTextI18n")
@@ -63,20 +66,28 @@ public class DataDetailActivity extends BaseActivity {
         title = "";
         if (bundle != null) {
             title = bundle.getString("title");
-            //设置标题
-            endDateStr = bundle.getString("dateStr");
-            startStr = DataCenterUtils.dateAddOrDec(endDateStr, -6);
-            if (StringUtil.checkStr(endDateStr) && StringUtil.checkStr(startStr)) {
-                if (endDateStr.length() > 5 && startStr.length() > 5) {
-                    String subEndStr = endDateStr.substring(5);
-                    String subStartStr = startStr.substring(5);
-                    date_tv.setText(subStartStr + "-" + subEndStr);
+            List<WeekBean> weekList = (List<WeekBean>) bundle.getSerializable("weekList");
+            endIndex = bundle.getInt("index");
+
+            if (weekList != null && weekList.size() >= 6) {
+                WeekBean weekBeanEnd = weekList.get(endIndex);
+                WeekBean weekBeanStart;
+                if (endIndex >= 6) {
+                    weekBeanStart = weekList.get(endIndex - 6);
+                    startIndex = endIndex - 6;
+                } else {
+                    weekBeanStart = weekList.get(0);
+                    startIndex = 0;
                 }
+
+                startStr = DataCenterUtils.dateToString(weekBeanStart.dateBegin, DataCenterUtils.SHORT_DATE_FORMAT);
+                endDateStr = DataCenterUtils.dateToString(weekBeanEnd.dateEnd, DataCenterUtils.SHORT_DATE_FORMAT);
+
+                date_tv.setText(startStr + "-" + endDateStr);
+                //获取一周数据
+                getData(weekBeanStart.dateBegin, weekBeanEnd.dateEnd);
             }
 
-            //获取一周数据
-            showProgressDialog();
-            getData(DataCenterUtils.changeDateFormat(startStr), DataCenterUtils.changeDateFormat(endDateStr));
         }
         //设置标题
         setTitle(title);
@@ -86,29 +97,33 @@ public class DataDetailActivity extends BaseActivity {
             list_title2_tv.setText(title);
         }
 
-        //选中日期返回
+
+        //选中日期区间返回
         MsgCenter.addListener(new MsgListener() {
             @Override
             public void onMsg(Object sender, String msg, Object... args) {
-                if (args[0] != null) {
-                    List<Date> dateList = (List<Date>) args[0];
 
-                    if (!dateList.isEmpty()) {
-                        endDateStr = DataCenterUtils.dateToString(dateList.get(dateList.size() - 1), DataCenterUtils.CHINESE_DATE_FORMAT);
-                        startStr = DataCenterUtils.dateToString(dateList.get(0), DataCenterUtils.CHINESE_DATE_FORMAT);
-
-                        if (endDateStr.length() > 5 && startStr.length() > 5) {
-                            String subEndStr = endDateStr.substring(5);
-                            String subStartStr = startStr.substring(5);
-                            date_tv.setText(subStartStr + "-" + subEndStr);
-                        }
-
-                        showProgressDialog();
-                        getData(DataCenterUtils.changeDateFormat(startStr), DataCenterUtils.changeDateFormat(endDateStr));
-                    }
+                List<WeekBean> weekList = DataCenterUtils.getWeekList();
+                if (args[1]!=null){
+                    startIndex = weekList.size()-1-(Integer) args[1];
                 }
+                if (args[0] != null) {
+                    endIndex = weekList.size()-1-(Integer) args[0];
+                }
+
+                WeekBean weekBeanStart=weekList.get(startIndex);
+                WeekBean weekBeanEnd = weekList.get(endIndex);
+
+                startStr = DataCenterUtils.dateToString(weekBeanStart.dateBegin, DataCenterUtils.SHORT_DATE_FORMAT);
+                endDateStr = DataCenterUtils.dateToString(weekBeanEnd.dateEnd, DataCenterUtils.SHORT_DATE_FORMAT);
+
+                date_tv.setText(startStr + "-" + endDateStr);
+                //获取一周数据
+                getData(weekBeanStart.dateBegin, weekBeanEnd.dateEnd);
+
+
             }
-        }, MsgID.Date_Select_Range);
+        }, MsgID.Week_Range_Select);
 
 
     }
@@ -122,9 +137,8 @@ public class DataDetailActivity extends BaseActivity {
         list_title1_tv = (TextView) findViewById(R.id.list_title1_tv);
         list_title1_tv.setText("日期");
         list_title2_tv = (TextView) findViewById(R.id.list_title2_tv);
+
         unSwipeListView = (UnSwipeListView) findViewById(R.id.unSwipeListView);
-
-
         scrollView.setVisibility(View.GONE);
         chart.setZoomEnabled(false);
         chart.setValueSelectionEnabled(true);
@@ -136,14 +150,19 @@ public class DataDetailActivity extends BaseActivity {
     }
 
     //获取一周数据
-    private void getData(String startDate, String endDate) {
-
+    private void getData(Date inWeekDateStart, Date inWeekDateEnd) {
+        showProgressDialog();
         RequestParams params = new RequestParams();
-        params.put("dateStart", startDate);
-        params.put("dateEnd", endDate);
         params.put("token", App.getApp().getToken());
-        execApi(ApiType.GET_WEEK_REPORT.setMethod(ApiType.RequestMethod.GET), params);
-
+        if (inWeekDateStart != null && inWeekDateEnd != null) {
+            String inWeekDateStartStr = DataCenterUtils.dateToString(inWeekDateStart, DataCenterUtils.UNDERLINE_DATE_FORMAT);
+            String inWeekDateEndStr = DataCenterUtils.dateToString(inWeekDateEnd, DataCenterUtils.UNDERLINE_DATE_FORMAT);
+            if (StringUtil.checkStr(inWeekDateStartStr) && StringUtil.checkStr(inWeekDateEndStr)) {
+                params.put("dateStart", inWeekDateStartStr);
+                params.put("dateEnd", inWeekDateEndStr);
+            }
+        }
+        execApi(ApiType.GET_SOME_WEEK_REPORT.setMethod(ApiType.RequestMethod.GET), params);
     }
 
 
@@ -152,28 +171,29 @@ public class DataDetailActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.date_tv_ll:
                 Bundle bundle = new Bundle();
-                bundle.putString("starDateStr", startStr);
-                bundle.putString("endDateStr", endDateStr);
+                bundle.putInt("startIndex", startIndex);
+                bundle.putInt("endIndex", endIndex);
                 bundle.putBoolean("isRange", true);
-                IntentUtil.activityForward(DataDetailActivity.this, DatePickerActivity.class, bundle, false);
+                IntentUtil.activityForward(WeekDetailActivity.this, WeekPickerActivity.class, bundle, false);
+
                 break;
         }
     }
 
     @Override
     public void onResponsed(Request req) {
-        if (req.getApi() == ApiType.GET_WEEK_REPORT) {
+        if (req.getApi() == ApiType.GET_SOME_WEEK_REPORT) {
             disMissDialog();
             scrollView.setVisibility(View.VISIBLE);
-            WeekReportResult reqData = (WeekReportResult) req.getData();
-            List<WeekReportResult.DailyReportsBean> dailyReports = reqData.dailyReports;
-            if (dailyReports != null && !dailyReports.isEmpty()) {
-                Collections.reverse(dailyReports);
+            SomeWeekReportResult reqData = (SomeWeekReportResult) req.getData();
+            List<SomeWeekReportResult.WeeklyReportsBean> weeklyReports = reqData.weeklyReports;
+            if (weeklyReports != null && !weeklyReports.isEmpty()) {
+                Collections.reverse(weeklyReports);
                 List<Column> columns = new ArrayList<>();
                 List<SubcolumnValue> values;
                 List<AxisValue> axisValues = new ArrayList<>();
-                for (int i = 0; i < dailyReports.size(); i++) {
-                    WeekReportResult.DailyReportsBean reportsBean = dailyReports.get(i);
+                for (int i = 0; i < weeklyReports.size(); i++) {
+                    SomeWeekReportResult.WeeklyReportsBean reportsBean = weeklyReports.get(i);
                     if (reportsBean != null) {
                         values = new ArrayList<>();
                         SubcolumnValue subcolumnValue = null;
@@ -199,18 +219,9 @@ public class DataDetailActivity extends BaseActivity {
                         Column column = new Column(values);
                         column.setHasLabelsOnlyForSelected(true);
                         columns.add(column);
-                        if (reportsBean.day.length() > 4) {
-                            String substring = reportsBean.day.substring(4);//去年份
-                            StringBuilder builder = new StringBuilder(substring);
-                            builder.insert(2, "/");//月日之间插入斜杠
-                            String day = null;
-                            if (builder.charAt(0) == '0') {//去掉月前面的0
-                                day = builder.toString().substring(1);
-                            } else {
-                                day = builder.toString();
-                            }
-                            axisValues.add(new AxisValue(i).setLabel(day));
-                        }
+                        int weekNumOfYear = DataCenterUtils.getWeekNumOfYear
+                                (DataCenterUtils.stringtoDate(reportsBean.week, DataCenterUtils.UN_SEPARATOR_SHORT_DATE_FORMAT));
+                        axisValues.add(new AxisValue(i).setLabel(weekNumOfYear + "周"));
                     }
                 }
                 ColumnChartData data = new ColumnChartData(columns);
@@ -227,7 +238,7 @@ public class DataDetailActivity extends BaseActivity {
                 chart.setColumnChartData(data);
 
                 //适配列表
-                unSwipeListView.setAdapter(new ContentAdapter(DataDetailActivity.this, dailyReports));
+                unSwipeListView.setAdapter(new ContentAdapter(WeekDetailActivity.this, weeklyReports));
 
             }
 
@@ -236,34 +247,47 @@ public class DataDetailActivity extends BaseActivity {
     }
 
 
-    class ContentAdapter extends CommonAdapter<WeekReportResult.DailyReportsBean> {
+    class ContentAdapter extends CommonAdapter<SomeWeekReportResult.WeeklyReportsBean> {
 
 
-        public ContentAdapter(Context context, List<WeekReportResult.DailyReportsBean> data) {
+        public ContentAdapter(Context context, List<SomeWeekReportResult.WeeklyReportsBean> data) {
             super(context, data, R.layout.item_data_detail);
         }
 
         @Override
-        public void convert(CommonViewHolder holder, WeekReportResult.DailyReportsBean dailyReportsBean) {
-            if (dailyReportsBean != null) {
+        public void convert(CommonViewHolder holder, SomeWeekReportResult.WeeklyReportsBean weeklyReportsBean) {
+            if (weeklyReportsBean != null) {
                 if (holder.getPosition() % 2 != 0) {
                     holder.getView(R.id.item_data_detail_ll).setBackgroundColor(getResources().getColor(R.color.white));
                 } else {
                     holder.getView(R.id.item_data_detail_ll).setBackgroundColor(getResources().getColor(R.color.order_title_bg));
                 }
-                holder.setText(R.id.item_data_detail_date, DataCenterUtils.changeFormat(dailyReportsBean.day, "yyyyMMdd", "yyyy.MM.dd"));
+
+                StringBuilder builder = new StringBuilder();
+                Date dateBegin = DataCenterUtils.stringtoDate(weeklyReportsBean.week, DataCenterUtils.UN_SEPARATOR_SHORT_DATE_FORMAT);
+                int weekNumOfYear = DataCenterUtils.getWeekNumOfYear(dateBegin);//第多少个周
+                builder.append("第").append(weekNumOfYear).append("周");
+                builder.append("(").append(DataCenterUtils.dateToString(dateBegin, DataCenterUtils.SHORT_DATE_FORMAT));//开始时间
+                Date dateEnd = DataCenterUtils.dateAddOrDec(dateBegin, 6);
+                if (dateEnd.getTime() > DataCenterUtils.getCurrDate().getTime()) {
+                    builder.append("-").append(DataCenterUtils.dateToString(DataCenterUtils.getCurrDate(), DataCenterUtils.SHORT_DATE_FORMAT)).append(")");//结束时间
+                } else {
+                    builder.append("-").append(DataCenterUtils.dateToString(dateEnd, DataCenterUtils.SHORT_DATE_FORMAT)).append(")");//结束时间
+                }
+
+                holder.setText(R.id.item_data_detail_date, builder.toString());
                 switch (title) {
                     case "注册用户数":
-                        holder.setText(R.id.item_data_detail_content, dailyReportsBean.registeredUserCount + "");
+                        holder.setText(R.id.item_data_detail_content, weeklyReportsBean.registeredUserCount + "");
                         break;
                     case "订单数":
-                        holder.setText(R.id.item_data_detail_content, dailyReportsBean.orderCount + "");
+                        holder.setText(R.id.item_data_detail_content, weeklyReportsBean.orderCount + "");
                         break;
                     case "付款订单数":
-                        holder.setText(R.id.item_data_detail_content, dailyReportsBean.paidOrderCount + "");
+                        holder.setText(R.id.item_data_detail_content, weeklyReportsBean.paidOrderCount + "");
                         break;
                     case "已支付金额":
-                        holder.setText(R.id.item_data_detail_content, StringUtil.toTwoString(dailyReportsBean.paidAmount + ""));
+                        holder.setText(R.id.item_data_detail_content, StringUtil.toTwoString(weeklyReportsBean.paidAmount + ""));
                         break;
                 }
 

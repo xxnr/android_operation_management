@@ -6,15 +6,17 @@
         <item name="android:textColor">#323232</item>
         <item name="android:textSize">16sp</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/default_act_bg</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
     </style>
-    <!-- Base application theme. -->
+    <!-- MainActivityTheme theme. -->
     <style name="MainActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:textColor">#323232</item>
         <item name="android:textSize">16sp</item>
         <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@color/default_act_bg</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
     </style>
@@ -35,7 +37,7 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <!-- 自定义progressdialog -->
+    <!-- 自定义progressDialog -->
     <style name="Loading_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
@@ -44,7 +46,6 @@
         <!-- 屏幕背景不变暗 -->
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowIsFloating">true</item>
-
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
@@ -55,7 +56,6 @@
     </style>
 
     <!-- Activity root布局默认-->
-
     <style name="base_activity">
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:clipToPadding">true</item>
@@ -74,7 +74,6 @@
 
 
     <!-- calendar 星期 样式 -->
-
     <style name="calendar_week">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -82,13 +81,9 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/deep_black</item>
-
     </style>
 
-
-
     <!-- 经纪人 列表cell 样式 -->
-
     <style name="agent_list_cell">
         <item name="android:layout_width">77dp</item>
         <item name="android:layout_height">match_parent</item>

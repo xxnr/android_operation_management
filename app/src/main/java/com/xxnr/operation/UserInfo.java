@@ -12,12 +12,20 @@ import com.xxnr.operation.developTools.app.App;
 import com.xxnr.operation.modules.LoginActivity;
 import com.xxnr.operation.protocol.bean.LoginResult;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+
 /**
- * Created by CAI on 2016/4/29.
+ * Created by 何鹏 on 2016/4/29.
  */
 public class UserInfo {
 
     public static String PreferenceUtil_NAME = "userInfo";
+
+
 
 
     //保存用户数据到本地
@@ -33,8 +41,23 @@ public class UserInfo {
         return preferenceUtil.getString("token", "");
     }
 
-    //获取用户Id
+    //读取用户类型
+    public static List<String> getRole(Context context) {
+        PreferenceUtil preferenceUtil = new PreferenceUtil(context, PreferenceUtil_NAME);
+        Set<String> roleSet = preferenceUtil.getStringSet("role", null);
+        if (roleSet != null) {
+            return new ArrayList<>(roleSet);
+        }
+        return null;
+    }
 
+    //保存用户类型
+    public static void saveRole(List<String> roleSet, Context context) {
+        PreferenceUtil preferenceUtil = new PreferenceUtil(context, PreferenceUtil_NAME);
+        preferenceUtil.putStringSet("role", new HashSet<>(roleSet));
+    }
+
+    //获取用户Id
     public static String getUid(Context context) {
         PreferenceUtil preferenceUtil = new PreferenceUtil(context, PreferenceUtil_NAME);
         return preferenceUtil.getString("userId", "");
@@ -48,7 +71,6 @@ public class UserInfo {
 
 
     //获取用户信息
-
     public static LoginResult.DatasBean getUserInfo(Context context) {
         DbUtils dbUtils = XUtilsDbHelper.getInstance(context, getUid(context));
         try {
@@ -60,8 +82,8 @@ public class UserInfo {
     }
 
     //保存用户信息
-
     public static void saveUserInfo(LoginResult.DatasBean datasBean, Context context) {
+
         DbUtils dbUtils = XUtilsDbHelper.getInstance(context, getUid(context));
         try {
             dbUtils.saveOrUpdate(datasBean);
@@ -86,6 +108,7 @@ public class UserInfo {
         App.getApp().setToken("");
 
     }
+
     // 调用此方法 去登录页面
     public static void tokenToLogin(Activity activity) {
         UserInfo.clearUserInfo(activity);
