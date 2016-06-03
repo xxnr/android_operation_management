@@ -119,10 +119,7 @@ public class Util {
 	}
 
 	public static boolean isHttp(String url) {
-		if (isEmpty(url) || url.length() < 10) {
-			return false;
-		}
-		return url.startsWith("http://");
+		return !(isEmpty(url) || url.length() < 10) && url.startsWith("http://");
 	}
 
 	public static void closeStream(InputStream is) {
@@ -244,10 +241,7 @@ public class Util {
 		if (o1 == o2) {
 			return true;
 		}
-		if (o1 == null) {
-			return false;
-		}
-		return o1.equals(o2);
+		return o1 != null && o1.equals(o2);
 	}
 
 	public static boolean notEmpty(String s) {

@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by CAI on 2016/5/4.
+ * Created by 何鹏 on 2016/5/4.
  */
 public class PotentialListResult extends ResponseResult implements Serializable {
 

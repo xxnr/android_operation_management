@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':PullToRefresh', ':SwipeBackLibrary', ':hellocharts-library', ':times'

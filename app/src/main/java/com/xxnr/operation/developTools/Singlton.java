@@ -111,9 +111,7 @@ public class Singlton {
 	 */
 	synchronized public static <T> void setInstance(T obj) {
 		assert (obj != null);
-		if (obj != null) {
-			all.put(obj.getClass(), obj);
-		}
+		all.put(obj.getClass(), obj);
 	}
 
 	synchronized public static <T> void removeInstance(Class<T> cls) {

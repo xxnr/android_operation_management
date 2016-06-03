@@ -60,9 +60,10 @@
     <!--订单titile背景-->
     <color name="order_title_bg">#f0f0f0</color>
 
+    <!--日报数量颜色-->
+    <color name="daily_report_count">#0091A2</color>
 
-
-
-
+    <!--日期加减不可点颜色-->
+    <color name="date_unable">#a2a2a2</color>
 
 </resources>
