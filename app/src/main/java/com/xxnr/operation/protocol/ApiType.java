@@ -2,6 +2,7 @@ package com.xxnr.operation.protocol;
 
 
 import com.xxnr.operation.protocol.bean.AgentReportResult;
+import com.xxnr.operation.protocol.bean.AgentReportTotalResult;
 import com.xxnr.operation.protocol.bean.EveryWeekReportResult;
 import com.xxnr.operation.protocol.bean.CustomerDetailResult;
 import com.xxnr.operation.protocol.bean.CustomerListResult;
@@ -109,6 +110,11 @@ public enum ApiType {
     GET_AGENT_RANK("/manager/api/dashboard/queryAgentReportYesterday", AgentReportResult.class),
 
     /**
+     * 数据中心：经纪人排行汇总
+     */
+    GET_AGENT_RANK_TOTAL("/manager/api/dashboard/queryAgentReports", AgentReportTotalResult.class),
+
+    /**
      * 数据中心：获得一周数据
      */
     GET_EVERY_WEEK_REPORT("/manager/api/dashboard/getWeeklyReport", EveryWeekReportResult.class),
@@ -119,8 +125,10 @@ public enum ApiType {
 
     TEST("", ResponseResult.class);
 
-//    private static String server_url = "http://101.200.194.203";
-    private static String server_url = "http://www.xinxinnongren.com";
+    private static String server_url = "http://101.200.194.203";
+//    private static String server_url = "http://www.xinxinnongren.com";
+//private static String server_url = "http://192.168.1.15:8070";
+
 
 
     public static final String url = server_url;

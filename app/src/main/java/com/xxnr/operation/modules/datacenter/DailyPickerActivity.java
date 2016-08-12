@@ -23,6 +23,9 @@ import java.util.List;
  */
 public class DailyPickerActivity extends BaseActivity {
     private boolean isRange = false;
+    private boolean isLimit = true;
+
+    private int limitDay =7;
 
 
     @Override
@@ -37,6 +40,14 @@ public class DailyPickerActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             isRange = bundle.getBoolean("isRange");
+            isLimit = bundle.getBoolean("isLimit",true);
+
+            if (isLimit){
+                limitDay=7;
+            }else {
+                limitDay=Integer.MAX_VALUE;
+            }
+
             showToast("请选择日期");
             if (isRange) {
                 String starDateStr = bundle.getString("starDateStr");
@@ -54,8 +65,8 @@ public class DailyPickerActivity extends BaseActivity {
                     if (isRange) {
                         List<Date> selectedDates = pickerView.getSelectedDates();
                         if (selectedDates != null&&!selectedDates.isEmpty()) {
-                            if (selectedDates.size() > 7) {
-                                showToast("不能大于7天");
+                            if (selectedDates.size() > limitDay) {
+                                showToast("不能大于"+limitDay+"天");
                                 Date dateStart = selectedDates.get(0);//保存第一个
                                 pickerView.reset();
                                 pickerView.selectDate(dateStart);

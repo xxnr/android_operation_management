@@ -57,6 +57,30 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/title_total_agent_count_ll"
+            android:layout_width="77dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/title_total_agent_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxEms="3"
+                android:text="总经纪人数"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/title_total_agent_count_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/sort_up" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
             android:id="@+id/title_reg_customer_count_ll"
             android:layout_width="77dp"
             android:layout_height="match_parent"

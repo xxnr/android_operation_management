@@ -91,7 +91,7 @@ public class WeekReportFragment extends BaseFragment {
                         Bundle bundle = new Bundle();
                         bundle.putInt("index", index);
                         bundle.putSerializable("weekList", (Serializable) weekList);
-                        bundle.putString("title", "注册用户数");
+                        bundle.putString("title", "用户及经纪人");
                         IntentUtil.activityForward(activity, WeekDetailActivity.class, bundle, false);
                     }
                 }

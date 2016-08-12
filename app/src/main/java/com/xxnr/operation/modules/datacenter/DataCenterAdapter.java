@@ -30,7 +30,7 @@ public class DataCenterAdapter extends FragmentPagerAdapter {
             case 1:
                 return new WeekReportFragment();
             case 2:
-                return new AgentReportFragment();
+                return new AgentFragment();
             default:
                 return new DailyReportFragment();
         }

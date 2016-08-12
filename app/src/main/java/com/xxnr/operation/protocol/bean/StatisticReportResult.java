@@ -16,9 +16,11 @@ public class StatisticReportResult extends ResponseResult{
      * serviceStartTime : 2015-11-17
      */
 
+    public int agentVerifiedCount;
     public int registeredUserCount;
     public int orderCount;
     public int completedOrderCount;
+    public double completedOrderPaidAmount;
     public double paidAmount;
     public String serviceStartTime;
 }

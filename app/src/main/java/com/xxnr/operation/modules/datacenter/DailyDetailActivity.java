@@ -41,13 +41,20 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 public class DailyDetailActivity extends BaseActivity {
     private ColumnChartView chart;
     private TextView date_tv;
+
     private String title;
     private TextView list_title1_tv;
     private TextView list_title2_tv;
+    private TextView list_title3_tv;
+
+    private TextView total_count_tv1;
+    private TextView total_count_tv2;
+
     private UnSwipeListView unSwipeListView;
     private ScrollView scrollView;
     private String endDateStr;
     private String startStr;
+    private View column_tip_ll;
 
 
     @Override
@@ -80,12 +87,24 @@ public class DailyDetailActivity extends BaseActivity {
         }
         //设置标题
         setTitle(title);
-        if (title.equals("已支付金额")) {
-            list_title2_tv.setText("已支付金额(元)");
-        } else {
-            list_title2_tv.setText(title);
-        }
 
+        if (title.equals("用户及经纪人")) {
+            column_tip_ll.setVisibility(View.VISIBLE);
+            list_title2_tv.setVisibility(View.VISIBLE);
+            total_count_tv1.setVisibility(View.VISIBLE);
+            list_title2_tv.setText("注测用户数");
+            list_title3_tv.setText("新经纪人数");
+
+        } else {
+            if (title.equals("已支付金额")){
+                list_title3_tv.setText("已支付金额(元)");
+            }else {
+                list_title3_tv.setText(title);
+            }
+            column_tip_ll.setVisibility(View.GONE);
+            list_title2_tv.setVisibility(View.GONE);
+            total_count_tv1.setVisibility(View.GONE);
+        }
         //选中日期返回
         MsgCenter.addListener(new MsgListener() {
             @Override
@@ -118,9 +137,15 @@ public class DailyDetailActivity extends BaseActivity {
         date_tv = (TextView) findViewById(R.id.date_tv);
         scrollView = (ScrollView) findViewById(R.id.data_detail_scrollView);
 
+        column_tip_ll = findViewById(R.id.column_tip_ll);
         list_title1_tv = (TextView) findViewById(R.id.list_title1_tv);
         list_title1_tv.setText("日期");
         list_title2_tv = (TextView) findViewById(R.id.list_title2_tv);
+        list_title3_tv = (TextView) findViewById(R.id.list_title3_tv);
+
+        total_count_tv1=(TextView)findViewById(R.id.total_count_tv1);
+        total_count_tv2=(TextView)findViewById(R.id.total_count_tv2);
+
         unSwipeListView = (UnSwipeListView) findViewById(R.id.unSwipeListView);
 
 
@@ -167,6 +192,39 @@ public class DailyDetailActivity extends BaseActivity {
             WeekReportResult reqData = (WeekReportResult) req.getData();
             List<WeekReportResult.DailyReportsBean> dailyReports = reqData.dailyReports;
             if (dailyReports != null && !dailyReports.isEmpty()) {
+                //计算总和
+                int total_count_1 = 0;
+                int total_count_2 = 0;
+                float total_count_2f=0f;
+
+                for (int i = 0; i < dailyReports.size(); i++) {
+                    WeekReportResult.DailyReportsBean reportsBean = dailyReports.get(i);
+                    if (reportsBean!=null){
+                        switch (title) {
+                            case "用户及经纪人":
+                                total_count_1+=reportsBean.registeredUserCount;
+                                total_count_2+=reportsBean.agentVerifiedCount;
+                                break;
+                            case "订单数":
+                                total_count_2+=reportsBean.orderCount;
+                                break;
+                            case "付款订单数":
+                                total_count_2+=reportsBean.paidOrderCount;
+                                break;
+                            case "已支付金额":
+                                total_count_2f+=reportsBean.paidAmount;
+                                break;
+                        }
+                    }
+                }
+
+                total_count_tv1.setText(total_count_1+"");
+                if (total_count_2f!=0f){
+                    total_count_tv2.setText(StringUtil.toTwoString(total_count_2f+""));
+                }else {
+                    total_count_tv2.setText(total_count_2+"");
+                }
+
                 Collections.reverse(dailyReports);
                 List<Column> columns = new ArrayList<>();
                 List<SubcolumnValue> values;
@@ -175,26 +233,33 @@ public class DailyDetailActivity extends BaseActivity {
                     WeekReportResult.DailyReportsBean reportsBean = dailyReports.get(i);
                     if (reportsBean != null) {
                         values = new ArrayList<>();
-                        SubcolumnValue subcolumnValue = null;
+                        SubcolumnValue subcolumnValue1 = null;
+                        SubcolumnValue subcolumnValue2 = null;
+
                         switch (title) {
-                            case "注册用户数":
-                                subcolumnValue = new SubcolumnValue();
-                                subcolumnValue.setValue(reportsBean.registeredUserCount);
+                            case "用户及经纪人":
+                                subcolumnValue1 = new SubcolumnValue();
+                                subcolumnValue1.setValue(reportsBean.registeredUserCount);
+                                subcolumnValue2 = new SubcolumnValue(reportsBean.agentVerifiedCount);
                                 break;
                             case "订单数":
-                                subcolumnValue = new SubcolumnValue();
-                                subcolumnValue.setValue(reportsBean.orderCount);
+                                subcolumnValue1 = new SubcolumnValue();
+                                subcolumnValue1.setValue(reportsBean.orderCount);
                                 break;
                             case "付款订单数":
-                                subcolumnValue = new SubcolumnValue();
-                                subcolumnValue.setValue(reportsBean.paidOrderCount);
+                                subcolumnValue1 = new SubcolumnValue();
+                                subcolumnValue1.setValue(reportsBean.paidOrderCount);
                                 break;
                             case "已支付金额":
-                                subcolumnValue = new SubcolumnValue();
-                                subcolumnValue.setValue(reportsBean.paidAmount);
+                                subcolumnValue1 = new SubcolumnValue();
+                                subcolumnValue1.setValue(reportsBean.paidAmount);
                                 break;
                         }
-                        values.add(subcolumnValue);
+                        values.add(subcolumnValue1);
+                        if (subcolumnValue2 != null) {
+                            subcolumnValue2.setColor(getResources().getColor(R.color.column_orange));
+                            values.add(subcolumnValue2);
+                        }
                         Column column = new Column(values);
                         column.setHasLabelsOnlyForSelected(true);
                         columns.add(column);
@@ -202,7 +267,7 @@ public class DailyDetailActivity extends BaseActivity {
                             String substring = reportsBean.day.substring(4);//去年份
                             StringBuilder builder = new StringBuilder(substring);
                             builder.insert(2, "/");//月日之间插入斜杠
-                            String day ;
+                            String day;
                             if (builder.charAt(0) == '0') {//去掉月前面的0
                                 day = builder.toString().substring(1);
                             } else {
@@ -246,14 +311,19 @@ public class DailyDetailActivity extends BaseActivity {
         public void convert(CommonViewHolder holder, WeekReportResult.DailyReportsBean dailyReportsBean) {
             if (dailyReportsBean != null) {
                 if (holder.getPosition() % 2 != 0) {
-                    holder.getView(R.id.item_data_detail_ll).setBackgroundColor(getResources().getColor(R.color.white));
-                } else {
                     holder.getView(R.id.item_data_detail_ll).setBackgroundColor(getResources().getColor(R.color.order_title_bg));
+                } else {
+                    holder.getView(R.id.item_data_detail_ll).setBackgroundColor(getResources().getColor(R.color.white));
                 }
                 holder.setText(R.id.item_data_detail_date, DataCenterUtils.changeFormat(dailyReportsBean.day, "yyyyMMdd", "yyyy.MM.dd"));
+
+                TextView item_data_detail_content = holder.getView(R.id.item_data_detail_count);
+                item_data_detail_content.setVisibility(View.GONE);
                 switch (title) {
-                    case "注册用户数":
-                        holder.setText(R.id.item_data_detail_content, dailyReportsBean.registeredUserCount + "");
+                    case "用户及经纪人":
+                        holder.setText(R.id.item_data_detail_content, dailyReportsBean.agentVerifiedCount + "");
+                        item_data_detail_content.setVisibility(View.VISIBLE);
+                        item_data_detail_content.setText(dailyReportsBean.registeredUserCount + "");
                         break;
                     case "订单数":
                         holder.setText(R.id.item_data_detail_content, dailyReportsBean.orderCount + "");

@@ -18,8 +18,7 @@ public interface MsgID {
     String Date_Select_Range = "Date_Select_Range";//选中日期区间
     String Week_Select = "Week_Select";//选中周期
     String Week_Range_Select = "Week_Range_Select";//选中周期区间
-
-
+    String Agent_Page_Select="Agent_Page_Select" ;//切换昨日业绩排行和汇总业绩排行
 
 
 

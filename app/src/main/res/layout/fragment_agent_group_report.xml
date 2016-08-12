@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.handmark.pulltorefresh.library.PullToRefreshScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pullToRefreshScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    ptr:ptrAnimationStyle="rotate"
+    ptr:ptrDrawable="@mipmap/loader"
+    ptr:ptrHeaderBackground="@color/re_flash"
+    ptr:ptrListViewExtrasEnabled="false"
+    ptr:ptrScrollingWhileRefreshingEnabled="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/write_half_circle_bg">
+
+
+            <ImageView
+                android:layout_marginRight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/search_icon_gary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="搜索"
+                android:textColor="@color/deep_black" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/date_tv_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_date_title_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@color/order_title_bg"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/calendar_icon" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="5月07日-05月13日" />
+
+        </LinearLayout>
+
+
+        <include layout="@layout/line_lay" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/common_margin"
+            android:paddingRight="@dimen/common_margin">
+
+            <TextView
+                android:layout_width="4dp"
+                android:layout_height="15dp"
+                android:background="@mipmap/list_title_icon1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="业绩进度汇总" />
+
+            <TextView
+                android:id="@+id/select_agent_page_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/list_bg_selector"
+                android:drawablePadding="5dp"
+                android:drawableRight="@mipmap/arrow_right2"
+                android:gravity="center"
+                android:text="昨日排行" />
+
+
+        </LinearLayout>
+
+        <include layout="@layout/line_lay" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.xxnr.operation.widget.UnSwipeListView
+                android:id="@+id/unSwipeListView_name"
+                android:layout_width="81dp"
+                android:layout_height="match_parent" />
+
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <com.xxnr.operation.widget.UnSwipeListView
+                        android:id="@+id/unSwipeListView"
+                        android:layout_width="385dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/white" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</com.handmark.pulltorefresh.library.PullToRefreshScrollView>
