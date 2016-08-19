@@ -41,6 +41,8 @@ public class DailyReportFragment extends BaseFragment {
     private TextView pay_price_1;
     private LinearLayout pay_price_ll_1;
     private TextView reg_count_2;
+    private TextView agent_reg_count_2;
+
     private TextView order_count_2;
     private TextView order_paid_count_2;
     private TextView pay_price_2;
@@ -93,7 +95,7 @@ public class DailyReportFragment extends BaseFragment {
                 break;
             case R.id.reg_count_ll_1:
                 Bundle bundle1 = new Bundle();
-                bundle1.putString("title", "注册用户数");
+                bundle1.putString("title", "用户及经纪人");
                 bundle1.putString("dateStr", date_picker.getText().toString());
                 IntentUtil.activityForward(activity, DailyDetailActivity.class, bundle1, false);
                 break;
@@ -156,6 +158,7 @@ public class DailyReportFragment extends BaseFragment {
 
 
         this.reg_count_2 = (TextView) view.findViewById(R.id.reg_count_2);
+        this.agent_reg_count_2 = (TextView) view.findViewById(R.id.agent_reg_count_2);
         this.order_count_2 = (TextView) view.findViewById(R.id.order_count_2);
         this.order_paid_count_2 = (TextView) view.findViewById(R.id.order_paid_count_2);
         this.pay_price_2 = (TextView) view.findViewById(R.id.pay_price_2);
@@ -254,9 +257,10 @@ public class DailyReportFragment extends BaseFragment {
         } else if (req.getApi() == ApiType.GET_STATISTIC_REPORT) {
             StatisticReportResult reqData = (StatisticReportResult) req.getData();
             reg_count_2.setText(reqData.registeredUserCount + "");
+            agent_reg_count_2.setText(reqData.agentVerifiedCount+"");
             order_count_2.setText(reqData.orderCount + "");
             order_paid_count_2.setText(reqData.completedOrderCount + "");
-            pay_price_2.setText("¥" + StringUtil.toTwoString(reqData.paidAmount + ""));
+            pay_price_2.setText("¥" + StringUtil.toTwoString(reqData.completedOrderPaidAmount + ""));
         }
 
     }

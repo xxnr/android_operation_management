@@ -33,7 +33,16 @@ public class DataCenterActivity extends BaseActivity {
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
         setTitle("数据中心");
+        showRightImage();
+        setRightImage(R.mipmap.question_unpress);
+        setRightViewListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(DataCenterQuestionActivity.class);
+            }
+        });
         initView();
+
     }
 
     //设置返回监听的，回传数据
@@ -55,7 +64,7 @@ public class DataCenterActivity extends BaseActivity {
         pop_bg.setVisibility(View.GONE);
 
 
-        UnSwipeViewPager viewPager= (UnSwipeViewPager) findViewById(R.id.viewPager);
+        UnSwipeViewPager viewPager = (UnSwipeViewPager) findViewById(R.id.viewPager);
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager.setScanScroll(false);
         initTabs();
@@ -120,4 +129,6 @@ public class DataCenterActivity extends BaseActivity {
     public void onResponsed(Request req) {
 
     }
+
+
 }

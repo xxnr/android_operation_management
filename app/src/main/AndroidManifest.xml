@@ -70,6 +70,8 @@
         <activity android:name=".modules.datacenter.WeekPickerActivity" />
         <!--选择日期：月：数据详情-->
         <activity android:name=".modules.datacenter.WeekDetailActivity" />
+        <!--数据中心：数据说明-->
+        <activity android:name=".modules.datacenter.DataCenterQuestionActivity" />
 
 
         <meta-data

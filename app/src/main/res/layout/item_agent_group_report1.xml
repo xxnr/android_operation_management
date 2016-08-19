@@ -14,8 +14,9 @@
             android:id="@+id/new_customer_count"
             style="@style/agent_list_cell" />
 
+
         <TextView
-            android:id="@+id/total_customer_count"
+            android:id="@+id/new_agent_count"
             style="@style/agent_list_cell" />
 
         <TextView
@@ -23,19 +24,13 @@
             style="@style/agent_list_cell" />
 
         <TextView
-            android:id="@+id/total_reg_customer_count"
+            android:id="@+id/new_order_count"
             style="@style/agent_list_cell" />
 
         <TextView
             android:id="@+id/order_count"
             style="@style/agent_list_cell" />
 
-        <TextView
-            android:id="@+id/price_amount"
-            android:layout_width="97dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

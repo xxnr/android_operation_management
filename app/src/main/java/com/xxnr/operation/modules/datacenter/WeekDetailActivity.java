@@ -42,8 +42,16 @@ public class WeekDetailActivity extends BaseActivity {
     private ColumnChartView chart;
     private TextView date_tv;
     private String title;
+
     private TextView list_title1_tv;
     private TextView list_title2_tv;
+    private TextView list_title3_tv;
+
+    private TextView total_count_tv1;
+    private TextView total_count_tv2;
+
+    private View column_tip_ll;
+
     private UnSwipeListView unSwipeListView;
     private ScrollView scrollView;
     private String endDateStr;
@@ -91,10 +99,22 @@ public class WeekDetailActivity extends BaseActivity {
         }
         //设置标题
         setTitle(title);
-        if (title.equals("已支付金额")) {
-            list_title2_tv.setText("已支付金额(元)");
+        if (title.equals("用户及经纪人")) {
+            column_tip_ll.setVisibility(View.VISIBLE);
+            list_title2_tv.setVisibility(View.VISIBLE);
+            total_count_tv1.setVisibility(View.VISIBLE);
+            list_title2_tv.setText("注测用户数");
+            list_title3_tv.setText("新经纪人数");
+
         } else {
-            list_title2_tv.setText(title);
+            if (title.equals("已支付金额")) {
+                list_title3_tv.setText("已支付金额(元)");
+            } else {
+                list_title3_tv.setText(title);
+            }
+            column_tip_ll.setVisibility(View.GONE);
+            list_title2_tv.setVisibility(View.GONE);
+            total_count_tv1.setVisibility(View.GONE);
         }
 
 
@@ -104,14 +124,14 @@ public class WeekDetailActivity extends BaseActivity {
             public void onMsg(Object sender, String msg, Object... args) {
 
                 List<WeekBean> weekList = DataCenterUtils.getWeekList();
-                if (args[1]!=null){
-                    startIndex = weekList.size()-1-(Integer) args[1];
+                if (args[1] != null) {
+                    startIndex = weekList.size() - 1 - (Integer) args[1];
                 }
                 if (args[0] != null) {
-                    endIndex = weekList.size()-1-(Integer) args[0];
+                    endIndex = weekList.size() - 1 - (Integer) args[0];
                 }
 
-                WeekBean weekBeanStart=weekList.get(startIndex);
+                WeekBean weekBeanStart = weekList.get(startIndex);
                 WeekBean weekBeanEnd = weekList.get(endIndex);
 
                 startStr = DataCenterUtils.dateToString(weekBeanStart.dateBegin, DataCenterUtils.SHORT_DATE_FORMAT);
@@ -134,9 +154,16 @@ public class WeekDetailActivity extends BaseActivity {
         date_tv = (TextView) findViewById(R.id.date_tv);
         scrollView = (ScrollView) findViewById(R.id.data_detail_scrollView);
 
+
+        column_tip_ll = findViewById(R.id.column_tip_ll);
         list_title1_tv = (TextView) findViewById(R.id.list_title1_tv);
         list_title1_tv.setText("日期");
         list_title2_tv = (TextView) findViewById(R.id.list_title2_tv);
+        list_title3_tv = (TextView) findViewById(R.id.list_title3_tv);
+
+        total_count_tv1 = (TextView) findViewById(R.id.total_count_tv1);
+        total_count_tv2 = (TextView) findViewById(R.id.total_count_tv2);
+
 
         unSwipeListView = (UnSwipeListView) findViewById(R.id.unSwipeListView);
         scrollView.setVisibility(View.GONE);
@@ -188,6 +215,39 @@ public class WeekDetailActivity extends BaseActivity {
             SomeWeekReportResult reqData = (SomeWeekReportResult) req.getData();
             List<SomeWeekReportResult.WeeklyReportsBean> weeklyReports = reqData.weeklyReports;
             if (weeklyReports != null && !weeklyReports.isEmpty()) {
+                //计算总和
+                int total_count_1 = 0;
+                int total_count_2 = 0;
+                float total_count_2f = 0f;
+
+                for (int i = 0; i < weeklyReports.size(); i++) {
+                    SomeWeekReportResult.WeeklyReportsBean reportsBean = weeklyReports.get(i);
+                    if (reportsBean != null) {
+                        switch (title) {
+                            case "用户及经纪人":
+                                total_count_1 += reportsBean.registeredUserCount;
+                                total_count_2 += reportsBean.agentVerifiedCount;
+                                break;
+                            case "订单数":
+                                total_count_2 += reportsBean.orderCount;
+                                break;
+                            case "付款订单数":
+                                total_count_2 += reportsBean.paidOrderCount;
+                                break;
+                            case "已支付金额":
+                                total_count_2f += reportsBean.paidAmount;
+                                break;
+                        }
+                    }
+                }
+
+                total_count_tv1.setText(total_count_1 + "");
+                if (total_count_2f != 0f) {
+                    total_count_tv2.setText(StringUtil.toTwoString(total_count_2f + ""));
+                } else {
+                    total_count_tv2.setText(total_count_2 + "");
+                }
+
                 Collections.reverse(weeklyReports);
                 List<Column> columns = new ArrayList<>();
                 List<SubcolumnValue> values;
@@ -196,26 +256,32 @@ public class WeekDetailActivity extends BaseActivity {
                     SomeWeekReportResult.WeeklyReportsBean reportsBean = weeklyReports.get(i);
                     if (reportsBean != null) {
                         values = new ArrayList<>();
-                        SubcolumnValue subcolumnValue = null;
+                        SubcolumnValue subcolumnValue1 = null;
+                        SubcolumnValue subcolumnValue2 = null;
                         switch (title) {
-                            case "注册用户数":
-                                subcolumnValue = new SubcolumnValue();
-                                subcolumnValue.setValue(reportsBean.registeredUserCount);
+                            case "用户及经纪人":
+                                subcolumnValue1 = new SubcolumnValue();
+                                subcolumnValue1.setValue(reportsBean.registeredUserCount);
+                                subcolumnValue2 = new SubcolumnValue(reportsBean.agentVerifiedCount);
                                 break;
                             case "订单数":
-                                subcolumnValue = new SubcolumnValue();
-                                subcolumnValue.setValue(reportsBean.orderCount);
+                                subcolumnValue1 = new SubcolumnValue();
+                                subcolumnValue1.setValue(reportsBean.orderCount);
                                 break;
                             case "付款订单数":
-                                subcolumnValue = new SubcolumnValue();
-                                subcolumnValue.setValue(reportsBean.paidOrderCount);
+                                subcolumnValue1 = new SubcolumnValue();
+                                subcolumnValue1.setValue(reportsBean.paidOrderCount);
                                 break;
                             case "已支付金额":
-                                subcolumnValue = new SubcolumnValue();
-                                subcolumnValue.setValue(reportsBean.paidAmount);
+                                subcolumnValue1 = new SubcolumnValue();
+                                subcolumnValue1.setValue(reportsBean.paidAmount);
                                 break;
                         }
-                        values.add(subcolumnValue);
+                        values.add(subcolumnValue1);
+                        if (subcolumnValue2 != null) {
+                            subcolumnValue2.setColor(getResources().getColor(R.color.column_orange));
+                            values.add(subcolumnValue2);
+                        }
                         Column column = new Column(values);
                         column.setHasLabelsOnlyForSelected(true);
                         columns.add(column);
@@ -258,9 +324,9 @@ public class WeekDetailActivity extends BaseActivity {
         public void convert(CommonViewHolder holder, SomeWeekReportResult.WeeklyReportsBean weeklyReportsBean) {
             if (weeklyReportsBean != null) {
                 if (holder.getPosition() % 2 != 0) {
-                    holder.getView(R.id.item_data_detail_ll).setBackgroundColor(getResources().getColor(R.color.white));
-                } else {
                     holder.getView(R.id.item_data_detail_ll).setBackgroundColor(getResources().getColor(R.color.order_title_bg));
+                } else {
+                    holder.getView(R.id.item_data_detail_ll).setBackgroundColor(getResources().getColor(R.color.white));
                 }
 
                 StringBuilder builder = new StringBuilder();
@@ -275,10 +341,15 @@ public class WeekDetailActivity extends BaseActivity {
                     builder.append("-").append(DataCenterUtils.dateToString(dateEnd, DataCenterUtils.SHORT_DATE_FORMAT)).append(")");//结束时间
                 }
 
+                TextView item_data_detail_content = holder.getView(R.id.item_data_detail_count);
+                item_data_detail_content.setVisibility(View.GONE);
+
                 holder.setText(R.id.item_data_detail_date, builder.toString());
                 switch (title) {
-                    case "注册用户数":
-                        holder.setText(R.id.item_data_detail_content, weeklyReportsBean.registeredUserCount + "");
+                    case "用户及经纪人":
+                        holder.setText(R.id.item_data_detail_content, weeklyReportsBean.agentVerifiedCount + "");
+                        item_data_detail_content.setVisibility(View.VISIBLE);
+                        item_data_detail_content.setText(weeklyReportsBean.registeredUserCount + "");
                         break;
                     case "订单数":
                         holder.setText(R.id.item_data_detail_content, weeklyReportsBean.orderCount + "");

@@ -27,6 +27,7 @@ public class WeekReportResult extends ResponseResult {
 
     public static class DailyReportsBean {
         public int registeredUserCount;
+        public int agentVerifiedCount;
         public int orderCount;
         public int paidOrderCount;
         public float paidAmount;

@@ -42,6 +42,7 @@ public class AgentReportResult extends ResponseResult {
         public String phone;
         public int newInviteeCount;
         public int newPotentialCustomerCount;
+        public int newAgentCount;
         public int totalInviteeCount;
         public int totalPotentialCustomerCount;
         public int totalCompletedOrderCount;

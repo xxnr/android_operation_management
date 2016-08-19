@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <ScrollView
+        android:scrollbars="none"
+        android:id="@+id/question_scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. 每日统计指标"
+                android:textColor="@color/default_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="5dp"
+                android:text="- 注册用户数：当日新注册的用户数\n- 新增经纪人：当日被认证为经纪人的用户数\n- 新增订单数：当日新下单的订单数\n- 付款订单数：当日新订单中，部分付款或已付款的订单\n- 已支付金额：当日新订单中，合计共支付的金额"
+                android:textColor="@color/deep_black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="2. 累计数据指标"
+                android:textColor="@color/default_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="5dp"
+                android:text="- 总用户数：累计注册用户数\n- 总经纪人数：当前用户中，被认证为经纪人的用户数\n- 总订单数：累计订单数\n- 已完成订单数：累计已完成的订单数量\n- 已完成金额：累计已支付的金额（元）"
+                android:textColor="@color/deep_black"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <ScrollView
+        android:scrollbars="none"
+        android:id="@+id/question_scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. 本周统计指标（本周一~当天实时；每小时实时更新）"
+                android:textColor="@color/default_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="5dp"
+                android:text="- 注册用户数：本周新注册的用户数\n- 新增经纪人：本周被认证为经纪人的用户数\n- 新增订单数：本周新下单的订单数\n- 付款订单数：本周新订单中，部分付款或已付款的订单\n- 已支付金额：本周新订单中，合计共支付的金额"
+                android:textColor="@color/deep_black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="2. 每周统计指标（周一 ~ 周日）"
+                android:textColor="@color/default_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="5dp"
+                android:text="- 注册用户数：本周新注册的用户数\n- 新增经纪人：本周被认证为经纪人的用户数\n- 新增订单数：本周新下单的订单数\n- 付款订单数：本周新订单中，部分付款或已付款的订单\n- 已支付金额：本周新订单中，合计共支付的金额"
+                android:textColor="@color/deep_black"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <ScrollView
+        android:scrollbars="none"
+        android:id="@+id/question_scrollView3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. 昨日排行指标"
+                android:textColor="@color/default_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="5dp"
+                android:text="a) 前一天的数据（每天早上4点更新）\n- 昨日新增客户：新绑定该经纪人为代表的用户数\n- 昨日登记客户：新登记的潜在客户数"
+                android:textColor="@color/deep_black"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="5dp"
+                android:text="b) 累计统计数据（每天早上4点更新）\n- 总客户：该经纪人共绑定的客户数\n- 总经纪人数：该经纪人的总客户中，被认证为经纪人的用户数\n- 总登记客户：该经纪人共登记的客户数\n- 已完成订单：该经纪人的客户所下订单中，累计已完成的订单数\n- 已支付金额：该经纪人的客户所下订单中，累计已完成的订单的总支付金额"
+                android:textColor="@color/deep_black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="2. 汇总排行指标"
+                android:textColor="@color/default_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="5dp"
+                android:text="a) 业绩进度汇总指标：\n- 新增客户：选择时间段内，新绑定该经纪人为代表的用户数\n- 新增经纪人：选择时间段内，新增客户中，被认证为经纪人的用户数\n- 新登记客户：选择时间段内，新登记的潜在客户数\n- 新增订单数：选择时间段内，该经纪人的客户新增的订单数（客户只要下了订单，就计算）\n- 新增订单完成数：上述新增订单中，已完成的订单数"
+                android:textColor="@color/deep_black"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:lineSpacingExtra="5dp"
+                android:text="b) 完成订单汇总指标：\n- 完成订单数：选择时间段内，被完成的订单数（与下单时间无关）\n- 完成订单金额：选择时间段内，被完成的订单中，订单的总支付金额"
+                android:textColor="@color/deep_black"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>
+
+
