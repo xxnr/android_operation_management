@@ -12,24 +12,38 @@
     ptr:ptrScrollingWhileRefreshingEnabled="true">
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/order_title_bg"
-            android:gravity="center">
+            android:layout_height="50dp"
+            android:background="@color/order_title_bg">
 
             <TextView
+                android:layout_centerInParent="true"
                 android:id="@+id/updateTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2016年5月10日"
                 android:textColor="@color/green" />
 
-        </LinearLayout>
+            <TextView
+                android:layout_alignParentRight="true"
+                android:id="@+id/select_agent_page_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="16dp"
+                android:drawablePadding="5dp"
+                android:drawableRight="@mipmap/arrow_right2"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:text="汇总排行" />
+
+
+        </RelativeLayout>
 
         <include layout="@layout/line_lay" />
 
@@ -53,16 +67,6 @@
                 android:layout_weight="1"
                 android:text="昨日业绩排行" />
 
-            <TextView
-                android:id="@+id/select_agent_page_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/list_bg_selector"
-                android:drawablePadding="5dp"
-                android:drawableRight="@mipmap/arrow_right2"
-                android:gravity="center"
-                android:text="汇总排行" />
 
 
         </LinearLayout>

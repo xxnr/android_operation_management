@@ -61,7 +61,9 @@
         <!--查看支付详情-->
         <activity android:name=".modules.order.OrderPayDetailActivity" />
         <!--数据详情-->
-        <activity android:name=".modules.datacenter.DataCenterActivity" />
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".modules.datacenter.DataCenterActivity" />
         <!--选择日期-->
         <activity android:name=".modules.datacenter.DailyPickerActivity" />
         <!--数据中心：日：数据详情-->
@@ -71,7 +73,8 @@
         <!--选择日期：月：数据详情-->
         <activity android:name=".modules.datacenter.WeekDetailActivity" />
         <!--数据中心：数据说明-->
-        <activity android:name=".modules.datacenter.DataCenterQuestionActivity" />
+        <activity
+            android:name=".modules.datacenter.DataCenterQuestionActivity" />
 
 
         <meta-data

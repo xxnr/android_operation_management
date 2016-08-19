@@ -1,14 +1,18 @@
 package com.xxnr.operation.modules.datacenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import com.xxnr.operation.CommonPagerAdapter;
 import com.xxnr.operation.R;
 import com.xxnr.operation.developTools.PreferenceUtil;
 import com.xxnr.operation.modules.BaseActivity;
@@ -16,14 +20,19 @@ import com.xxnr.operation.protocol.Request;
 import com.xxnr.operation.widget.UnSwipeViewPager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by 何鹏 on 2016/5/18.
  */
 public class DataCenterActivity extends BaseActivity {
-    private ArrayList<String> titleList = new ArrayList<>();
-    private RelativeLayout pop_bg;
+    private List<String> titleList = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
 
+    private RelativeLayout pop_bg;
+    private InputMethodManager manager;
+
+    private OutTouchListener listener;
 
     @Override
     public int getLayout() {
@@ -42,6 +51,7 @@ public class DataCenterActivity extends BaseActivity {
             }
         });
         initView();
+        manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
     }
 
@@ -63,15 +73,12 @@ public class DataCenterActivity extends BaseActivity {
         pop_bg = (RelativeLayout) findViewById(R.id.pop_bg);
         pop_bg.setVisibility(View.GONE);
 
-
         UnSwipeViewPager viewPager = (UnSwipeViewPager) findViewById(R.id.viewPager);
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager.setScanScroll(false);
-        initTabs();
         setViewClick(R.id.tips_button);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        viewPager.setAdapter(new DataCenterAdapter(fragmentManager, titleList));
+        initTabs();
+        viewPager.setAdapter(new CommonPagerAdapter(getSupportFragmentManager(), titleList, fragments));
         mTabLayout.setupWithViewPager(viewPager);//设置联动
         viewPager.setOffscreenPageLimit(titleList.size());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -112,9 +119,19 @@ public class DataCenterActivity extends BaseActivity {
      * 添加title
      */
     private void initTabs() {
-        titleList.add("日报");
-        titleList.add("周报");
-        titleList.add("经纪人");
+
+        if (titleList.isEmpty()) {
+            titleList.add("日报");
+            titleList.add("周报");
+            titleList.add("经纪人");
+        }
+
+        if (fragments.isEmpty()) {
+            fragments.add(new DailyReportFragment());
+            fragments.add(new WeekReportFragment());
+            fragments.add(new AgentFragment());
+        }
+
     }
 
 
@@ -130,5 +147,54 @@ public class DataCenterActivity extends BaseActivity {
 
     }
 
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View view = getCurrentFocus();
+            /*隐藏软键盘  关闭搜索框 */
+            if (view != null) {
+                if (isShouldHideInput(view, ev)) {
+                    if (manager != null) {
+                        manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    if (listener!=null){
+                        listener.onTouchEvent(ev);
+                    }
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+    }
+
+
+    public boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            int[] leftTop = {0, 0};
+            //获取输入框当前的location位置
+            v.getLocationInWindow(leftTop);
+            int left = leftTop[0];
+            int top = leftTop[1];
+            int bottom = top + v.getHeight();
+            int right = left + v.getWidth();
+            return !(event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom);
+        }
+        return false;
+    }
+
+    public interface OutTouchListener {
+         void onTouchEvent(MotionEvent event);
+    }
+
+    public void registerOutTouchListener(OutTouchListener listener)
+    {
+       this.listener=listener;
+    }
+    public void unRegisterOutTouchListener()
+    {
+        this.listener=null;
+    }
 
 }

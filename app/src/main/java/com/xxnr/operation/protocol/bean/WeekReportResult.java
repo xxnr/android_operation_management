@@ -30,7 +30,7 @@ public class WeekReportResult extends ResponseResult {
         public int agentVerifiedCount;
         public int orderCount;
         public int paidOrderCount;
-        public float paidAmount;
+        public double paidAmount;
         public int signedUserCount;
         public int completedOrderCount;
         public int newPotentialCustomerCount;

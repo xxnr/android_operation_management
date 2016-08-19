@@ -85,6 +85,10 @@ public abstract class BaseFragment extends Fragment implements
         } else if (req.isSuccess()) {
             onResponsed(req);
         } else {
+            if (req.getApi()==ApiType.GET_AGENT_RANK_TOTAL){
+                onResponsed(req);
+            }
+
             req.showErrorMsg();
         }
     }

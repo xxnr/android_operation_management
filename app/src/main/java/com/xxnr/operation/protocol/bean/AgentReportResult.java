@@ -47,5 +47,6 @@ public class AgentReportResult extends ResponseResult {
         public int totalPotentialCustomerCount;
         public int totalCompletedOrderCount;
         public double totalPaidAmount;
+        public double totalCompletedOrderPaidAmount;
     }
 }

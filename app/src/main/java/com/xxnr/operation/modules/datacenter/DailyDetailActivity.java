@@ -3,6 +3,7 @@ package com.xxnr.operation.modules.datacenter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -92,7 +93,7 @@ public class DailyDetailActivity extends BaseActivity {
             column_tip_ll.setVisibility(View.VISIBLE);
             list_title2_tv.setVisibility(View.VISIBLE);
             total_count_tv1.setVisibility(View.VISIBLE);
-            list_title2_tv.setText("注测用户数");
+            list_title2_tv.setText("注册用户数");
             list_title3_tv.setText("新经纪人数");
 
         } else {
@@ -195,7 +196,7 @@ public class DailyDetailActivity extends BaseActivity {
                 //计算总和
                 int total_count_1 = 0;
                 int total_count_2 = 0;
-                float total_count_2f=0f;
+                double total_count_2f=0;
 
                 for (int i = 0; i < dailyReports.size(); i++) {
                     WeekReportResult.DailyReportsBean reportsBean = dailyReports.get(i);
@@ -219,7 +220,7 @@ public class DailyDetailActivity extends BaseActivity {
                 }
 
                 total_count_tv1.setText(total_count_1+"");
-                if (total_count_2f!=0f){
+                if (total_count_2f!=0){
                     total_count_tv2.setText(StringUtil.toTwoString(total_count_2f+""));
                 }else {
                     total_count_tv2.setText(total_count_2+"");
@@ -241,6 +242,7 @@ public class DailyDetailActivity extends BaseActivity {
                                 subcolumnValue1 = new SubcolumnValue();
                                 subcolumnValue1.setValue(reportsBean.registeredUserCount);
                                 subcolumnValue2 = new SubcolumnValue(reportsBean.agentVerifiedCount);
+                                subcolumnValue2.setColor(getResources().getColor(R.color.column_orange));
                                 break;
                             case "订单数":
                                 subcolumnValue1 = new SubcolumnValue();
@@ -252,12 +254,12 @@ public class DailyDetailActivity extends BaseActivity {
                                 break;
                             case "已支付金额":
                                 subcolumnValue1 = new SubcolumnValue();
-                                subcolumnValue1.setValue(reportsBean.paidAmount);
+                                subcolumnValue1.setValue((float) reportsBean.paidAmount);
                                 break;
                         }
                         values.add(subcolumnValue1);
                         if (subcolumnValue2 != null) {
-                            subcolumnValue2.setColor(getResources().getColor(R.color.column_orange));
+
                             values.add(subcolumnValue2);
                         }
                         Column column = new Column(values);
@@ -288,6 +290,7 @@ public class DailyDetailActivity extends BaseActivity {
                 data.setAxisXBottom(axisX);
                 data.setAxisYLeft(axisY);
                 data.setValueLabelBackgroundEnabled(false);
+                data.setValueLabelsTextColor(getResources().getColor(R.color.deep_black));
                 chart.setColumnChartData(data);
 
                 //适配列表
@@ -332,6 +335,7 @@ public class DailyDetailActivity extends BaseActivity {
                         holder.setText(R.id.item_data_detail_content, dailyReportsBean.paidOrderCount + "");
                         break;
                     case "已支付金额":
+                        Log.d("ContentAdapter", "weeklyReportsBean.paidAmount:" + dailyReportsBean.paidAmount);
                         holder.setText(R.id.item_data_detail_content, StringUtil.toTwoString(dailyReportsBean.paidAmount + ""));
                         break;
                 }

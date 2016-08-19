@@ -21,7 +21,7 @@ android {
 
         debug {
             //开启代码混淆
-            minifyEnabled false
+            minifyEnabled true
             // 移除无用的resource文件
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -35,7 +35,7 @@ android {
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile project(':PullToRefresh')
     compile project(':SwipeBackLibrary')
@@ -55,6 +55,5 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:lib-manipulation:3.1.0@aar'
     compile 'com.nhaarman.listviewanimations:lib-core-slh:3.1.0@aar'
     compile 'com.umeng.analytics:analytics:latest.integration'
-
-
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

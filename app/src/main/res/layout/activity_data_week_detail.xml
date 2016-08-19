@@ -31,7 +31,7 @@
                 <LinearLayout
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@color/order_title_bg"
+                    android:background="@drawable/date_icon_bg_with_radius"
                     android:gravity="center">
 
                     <TextView
@@ -122,7 +122,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="注侧用户数" />
+                    android:text="注册用户数" />
 
 
                 <TextView

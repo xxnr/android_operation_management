@@ -35,6 +35,9 @@ public final class DateUtil {
     // 格式：月－日
 	public static final String SHORT_DATE_FORMAT = "MM-dd";
 
+	// 格式：月－日
+	public static final String SHORT_DATE_FORMAT_DOT = "MM.dd";
+
 	// 格式: 年月日时分秒
 	public static final String SHORT_LINE_FORMAT = "yyyyMMddHHmmss";
 

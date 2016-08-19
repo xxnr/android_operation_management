@@ -2,6 +2,8 @@ package com.xxnr.operation.utils;
 
 
 
+import android.util.Log;
+
 import com.xxnr.operation.developTools.StrBuilder;
 
 import java.text.DecimalFormat;
@@ -76,11 +78,45 @@ public class StringUtil {
         try {
             Double v = Double.parseDouble(str);
             DecimalFormat df = new DecimalFormat("0.00");
-            return String.valueOf(df.format(v));
+            return fmtMicrometer(String.valueOf(df.format(v)));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return str;
+    }
+
+    /**
+     * 格式化数字为千分位显示；
+     * @param text 要格式化的数字；
+     * @return
+     */
+    public static String fmtMicrometer(String text)
+    {
+        DecimalFormat df = null;
+        if(text.indexOf(".") > 0)
+        {
+            if(text.length() - text.indexOf(".")-1 == 0)
+            {
+                df = new DecimalFormat("###,##0.");
+            }else if(text.length() - text.indexOf(".")-1 == 1)
+            {
+                df = new DecimalFormat("###,##0.0");
+            }else
+            {
+                df = new DecimalFormat("###,##0.00");
+            }
+        }else
+        {
+            df = new DecimalFormat("###,##0");
+        }
+        double number;
+        try {
+            number = Double.parseDouble(text);
+            return df.format(number);
+        } catch (Exception e) {
+            return text;
+        }
+
     }
 
 

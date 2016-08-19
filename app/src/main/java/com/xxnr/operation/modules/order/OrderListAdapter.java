@@ -159,7 +159,7 @@ public class OrderListAdapter extends CommonAdapter<OrderListResult.DatasBean.It
 
                     //附加选项
                     StringBuilder stringAdditions = new StringBuilder();
-                    float car_additions_price = 0;
+                    double car_additions_price = 0;
                     if (skUs.get(i).additions != null && !skUs.get(i).additions.isEmpty()) {
                         viewHolderChild.additions_lin.setVisibility(View.VISIBLE);
                         stringAdditions.append("附加项目:");

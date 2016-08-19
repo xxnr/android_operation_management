@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.xxnr.operation.MsgID;
 import com.xxnr.operation.R;
+import com.xxnr.operation.developTools.DateUtil;
 import com.xxnr.operation.developTools.app.App;
 import com.xxnr.operation.developTools.msg.MsgCenter;
 import com.xxnr.operation.developTools.msg.MsgListener;
@@ -103,7 +104,7 @@ public class WeekDetailActivity extends BaseActivity {
             column_tip_ll.setVisibility(View.VISIBLE);
             list_title2_tv.setVisibility(View.VISIBLE);
             total_count_tv1.setVisibility(View.VISIBLE);
-            list_title2_tv.setText("注测用户数");
+            list_title2_tv.setText("注册用户数");
             list_title3_tv.setText("新经纪人数");
 
         } else {
@@ -218,7 +219,7 @@ public class WeekDetailActivity extends BaseActivity {
                 //计算总和
                 int total_count_1 = 0;
                 int total_count_2 = 0;
-                float total_count_2f = 0f;
+                double total_count_2f = 0;
 
                 for (int i = 0; i < weeklyReports.size(); i++) {
                     SomeWeekReportResult.WeeklyReportsBean reportsBean = weeklyReports.get(i);
@@ -242,7 +243,7 @@ public class WeekDetailActivity extends BaseActivity {
                 }
 
                 total_count_tv1.setText(total_count_1 + "");
-                if (total_count_2f != 0f) {
+                if (total_count_2f != 0) {
                     total_count_tv2.setText(StringUtil.toTwoString(total_count_2f + ""));
                 } else {
                     total_count_tv2.setText(total_count_2 + "");
@@ -274,7 +275,7 @@ public class WeekDetailActivity extends BaseActivity {
                                 break;
                             case "已支付金额":
                                 subcolumnValue1 = new SubcolumnValue();
-                                subcolumnValue1.setValue(reportsBean.paidAmount);
+                                subcolumnValue1.setValue((float) reportsBean.paidAmount);
                                 break;
                         }
                         values.add(subcolumnValue1);
@@ -301,8 +302,8 @@ public class WeekDetailActivity extends BaseActivity {
                 data.setAxisXBottom(axisX);
                 data.setAxisYLeft(axisY);
                 data.setValueLabelBackgroundEnabled(false);
+                data.setValueLabelsTextColor(getResources().getColor(R.color.deep_black));
                 chart.setColumnChartData(data);
-
                 //适配列表
                 unSwipeListView.setAdapter(new ContentAdapter(WeekDetailActivity.this, weeklyReports));
 
@@ -332,13 +333,13 @@ public class WeekDetailActivity extends BaseActivity {
                 StringBuilder builder = new StringBuilder();
                 Date dateBegin = DataCenterUtils.stringtoDate(weeklyReportsBean.week, DataCenterUtils.UN_SEPARATOR_SHORT_DATE_FORMAT);
                 int weekNumOfYear = DataCenterUtils.getWeekNumOfYear(dateBegin);//第多少个周
-                builder.append("第").append(weekNumOfYear).append("周");
-                builder.append("(").append(DataCenterUtils.dateToString(dateBegin, DataCenterUtils.SHORT_DATE_FORMAT));//开始时间
+                builder.append(weekNumOfYear).append("周");
+                builder.append("(").append(DataCenterUtils.dateToString(dateBegin, DateUtil.SHORT_DATE_FORMAT_DOT));//开始时间
                 Date dateEnd = DataCenterUtils.dateAddOrDec(dateBegin, 6);
                 if (dateEnd.getTime() > DataCenterUtils.getCurrDate().getTime()) {
-                    builder.append("-").append(DataCenterUtils.dateToString(DataCenterUtils.getCurrDate(), DataCenterUtils.SHORT_DATE_FORMAT)).append(")");//结束时间
+                    builder.append("-").append(DataCenterUtils.dateToString(DataCenterUtils.getCurrDate(), DateUtil.SHORT_DATE_FORMAT_DOT)).append(")");//结束时间
                 } else {
-                    builder.append("-").append(DataCenterUtils.dateToString(dateEnd, DataCenterUtils.SHORT_DATE_FORMAT)).append(")");//结束时间
+                    builder.append("-").append(DataCenterUtils.dateToString(dateEnd, DateUtil.SHORT_DATE_FORMAT_DOT)).append(")");//结束时间
                 }
 
                 TextView item_data_detail_content = holder.getView(R.id.item_data_detail_count);

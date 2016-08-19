@@ -125,8 +125,8 @@ public enum ApiType {
 
     TEST("", ResponseResult.class);
 
-    private static String server_url = "http://101.200.194.203";
-//    private static String server_url = "http://www.xinxinnongren.com";
+//    private static String server_url = "http://ppe.xinxinnongren.com";
+    private static String server_url = "http://www.xinxinnongren.com";
 //private static String server_url = "http://192.168.1.15:8070";
 
 
