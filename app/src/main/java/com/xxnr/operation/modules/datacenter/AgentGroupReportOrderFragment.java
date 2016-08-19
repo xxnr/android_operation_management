@@ -3,6 +3,7 @@ package com.xxnr.operation.modules.datacenter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * Created by 何鹏 on 2016/5/24.
  */
-public class AgentGroupReportAchievementFragment extends BaseFragment {
+public class AgentGroupReportOrderFragment extends BaseFragment {
     private UnSwipeListView unSwipeListView;
     private UnSwipeListView unSwipeListView_name;
 
@@ -43,17 +44,17 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
     private int SORTORDER;
     private String SEARCH;
 
+
     private AgentAdapter adapter;
     private NameAgentAdapter nameAdapter;
 
     private String endDateStr;
     private String startStr;
+    private View cacheView;
 
-    View cacheView;
 
-
-    public static AgentGroupReportAchievementFragment newInstance(String startStr, String endDateStr) {
-        AgentGroupReportAchievementFragment mFragment = new AgentGroupReportAchievementFragment();
+    public static AgentGroupReportOrderFragment newInstance(String startStr, String endDateStr) {
+        AgentGroupReportOrderFragment mFragment = new AgentGroupReportOrderFragment();
         Bundle bundle = new Bundle();
         bundle.putString("startStr", startStr);
         bundle.putString("endDateStr", endDateStr);
@@ -71,24 +72,12 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
     @Override
     public void OnViewClick(View v) {
         switch (v.getId()) {
-            case R.id.title_new_customer_count_ll:
-                SORT = "NEWINVITEE";
+            case R.id.order_complete_count_ll:
+                SORT = "COMPLETEDORDER";
                 sortOrder(v, SORT);
                 break;
-            case R.id.title_total_agent_count_ll:
-                SORT = "NEWAGENT";
-                sortOrder(v, SORT);
-                break;
-            case R.id.title_reg_customer_count_ll:
-                SORT = "NEWPOTENTIALCUSTOMER";
-                sortOrder(v, SORT);
-                break;
-            case R.id.title_new_order_count_ll:
-                SORT = "NEWORDER";
-                sortOrder(v, SORT);
-                break;
-            case R.id.title_order_count_ll:
-                SORT = "NEWORDERCOMPLETED";
+            case R.id.order_complete_price_ll:
+                SORT = "COMPLETEDORDERPAIDAMOUT";
                 sortOrder(v, SORT);
                 break;
         }
@@ -96,7 +85,7 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
 
     //sort
     public void sortOrder(View v, String sort) {
-        cacheView = v;
+
         if (titleViewHolder != null) {
             page = 1;
             if ((v.getTag()) != null && (Boolean) v.getTag()) {
@@ -123,20 +112,19 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
                 }
             }
         }
+        cacheView=v;
     }
 
     @Override
     public View InItView() {
-        View view = inflater.inflate(R.layout.fragment_agent_group_report_achievement, null);
+        View view = inflater.inflate(R.layout.fragment_agent_group_report_order, null);
         initView(view);
         if (getArguments() != null) {
             startStr = getArguments().getString("startStr");
             endDateStr = getArguments().getString("endDateStr");
         }
-
-
         showProgressDialog();
-        SORT = "NEWINVITEE";
+        SORT = "COMPLETEDORDER";
         SORTORDER = -1;
         getData(SORT);
         return view;
@@ -148,17 +136,16 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
         unSwipeListView = ((UnSwipeListView) view.findViewById(R.id.unSwipeListView));
         unSwipeListView_name = ((UnSwipeListView) view.findViewById(R.id.unSwipeListView_name));
         View header_unSwipeListView_name = inflater.inflate(R.layout.head_agent_report_name, null);
-        View header_unSwipeListView = inflater.inflate(R.layout.head_agent_group_report_achievement, null);
+        View header_unSwipeListView = inflater.inflate(R.layout.head_agent_group_report_order, null);
         unSwipeListView_name.addHeaderView(header_unSwipeListView_name);
         unSwipeListView.addHeaderView(header_unSwipeListView);
 
         titleViewHolder = new TitleViewHolder(header_unSwipeListView);
         titleViewHolder.init();
         titleViewHolder.reset();
-
-        titleViewHolder.title_new_customer_count_icon.setVisibility(View.VISIBLE);
-        titleViewHolder.title_new_customer_count_icon.setBackgroundResource(R.mipmap.sort_down);
-        titleViewHolder.title_new_customer_count_ll.setTag(false);
+        titleViewHolder.order_complete_count_icon.setVisibility(View.VISIBLE);
+        titleViewHolder.order_complete_count_icon.setBackgroundResource(R.mipmap.sort_down);
+        titleViewHolder.order_complete_count_ll.setTag(false);
     }
 
 
@@ -166,7 +153,7 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
         RequestParams params = new RequestParams();
         params.put("token", App.getApp().getToken());
         params.put("max", 20);
-        params.put("type", 1);
+        params.put("type", 2);
         params.put("dateStart", DataCenterUtils.changeDateFormat(startStr));
         params.put("dateEnd", DataCenterUtils.changeDateFormat(endDateStr));
         params.put("page", page);
@@ -179,7 +166,6 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
             params.put("search", SEARCH);
             execApi(ApiType.GET_AGENT_RANK_TOTAL.setMethod(ApiType.RequestMethod.GET), params);
         }
-
     }
 
     @Override
@@ -229,7 +215,7 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
                         showToast("没有更多经纪人");
                     }
                 }
-            } else {
+            }else {
                 if (adapter != null) {
                     adapter.clear();
                 }
@@ -237,14 +223,13 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
                     nameAdapter.clear();
                 }
             }
-
         }
     }
 
-    //上拉加载更多
+    //下拉刷新
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRefreshEvent(AgentGroupRefresh event) {
-        if (!event.current_page_isOrder) {
+        if (event.current_page_isOrder){
             page++;
             getData(SORT);
         }
@@ -262,16 +247,14 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearch(AgentGroupSearch event) {
         if (SORTORDER == 0) {
+            page=1;
             SEARCH = event.search;
-            getData(null);
+            getData(SORT);
         } else {
-            page = 1;
             titleViewHolder.resetOnSeach();
             SORTORDER = 0;
         }
     }
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUnSearch(AgentGroupUnSearch event) {
@@ -285,24 +268,25 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
             sortOrder(cacheView, SORT);
         }else {
             titleViewHolder.reset();
-            titleViewHolder.title_new_customer_count_icon.setVisibility(View.VISIBLE);
-            titleViewHolder.title_new_customer_count_icon.setBackgroundResource(R.mipmap.sort_down);
-            titleViewHolder.title_new_customer_count_ll.setTag(false);
-            SEARCH = null;
-            SORT = "NEWINVITEE";
+            titleViewHolder.order_complete_count_icon.setVisibility(View.VISIBLE);
+            titleViewHolder.order_complete_count_icon.setBackgroundResource(R.mipmap.sort_down);
+            titleViewHolder.order_complete_count_ll.setTag(false);
+            SEARCH=null;
+            SORT = "COMPLETEDORDER";
             page = 1;
             SORTORDER = -1;
             getData(SORT);
         }
-    }
 
+
+    }
 
     /**
      * 业绩进度汇总
      */
     class AgentAdapter extends CommonAdapter<AgentReportTotalResult.AgentReportsBean> {
         public AgentAdapter(Context context, List<AgentReportTotalResult.AgentReportsBean> data) {
-            super(context, data, R.layout.item_agent_group_report_achievement);
+            super(context, data, R.layout.item_agent_group_report_order);
         }
 
         @Override
@@ -313,11 +297,8 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
                 } else {
                     holder.getView(R.id.item_agent_report_ll).setBackgroundColor(getResources().getColor(R.color.white));
                 }
-                holder.setText(R.id.new_customer_count, agentReportBean.newInviteeCount + "");//新增客户
-                holder.setText(R.id.new_agent_count, agentReportBean.newAgentCount + "");//新登记经纪人
-                holder.setText(R.id.reg_customer_count, agentReportBean.newPotentialCustomerCount + "");//新登记客户
-                holder.setText(R.id.new_order_count, agentReportBean.newOrderCount + "");//新订单数
-                holder.setText(R.id.order_count, agentReportBean.newOrderCompletedCount + "");//新完成订单数
+                holder.setText(R.id.item_order_complete_count, agentReportBean.completedOrderCount + "");//完成订单数
+                holder.setText(R.id.item_order_complete_price, StringUtil.toTwoString(agentReportBean.completedOrderPaidAmount + ""));//完成订单金额
             }
         }
     }
@@ -349,81 +330,50 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
 
 
     public class TitleViewHolder {
-        public ImageView title_new_customer_count_icon;
-        public ImageView title_total_agent_count_icon;
-        public ImageView title_reg_customer_count_icon;
-        public ImageView title_new_order_count_icon;
-        public ImageView title_order_count_icon;
+        public ImageView order_complete_count_icon;
+        public ImageView order_complete_price_icon;
 
-        public LinearLayout title_new_customer_count_ll;
-        public LinearLayout title_total_agent_count_ll;
-        public LinearLayout title_reg_customer_count_ll;
-        public LinearLayout title_new_order_count_ll;
-        public LinearLayout title_order_count_ll;
+
+        public LinearLayout order_complete_count_ll;
+        public LinearLayout order_complete_price_ll;
+
 
         public TitleViewHolder(View rootView) {
-            this.title_new_customer_count_icon = (ImageView) rootView.findViewById(R.id.title_new_customer_count_icon);
-            this.title_total_agent_count_icon = (ImageView) rootView.findViewById(R.id.title_total_agent_count_icon);
-            this.title_reg_customer_count_icon = (ImageView) rootView.findViewById(R.id.title_reg_customer_count_icon);
-            this.title_new_order_count_icon = (ImageView) rootView.findViewById(R.id.title_new_order_count_icon);
-            this.title_order_count_icon = (ImageView) rootView.findViewById(R.id.title_order_count_icon);
+            this.order_complete_count_icon = (ImageView) rootView.findViewById(R.id.order_complete_count_icon);
+            this.order_complete_price_icon = (ImageView) rootView.findViewById(R.id.order_complete_price_icon);
 
-            this.title_new_customer_count_ll = (LinearLayout) rootView.findViewById(R.id.title_new_customer_count_ll);
-            this.title_total_agent_count_ll = (LinearLayout) rootView.findViewById(R.id.title_total_agent_count_ll);
-            this.title_reg_customer_count_ll = (LinearLayout) rootView.findViewById(R.id.title_reg_customer_count_ll);
-            this.title_new_order_count_ll = (LinearLayout) rootView.findViewById(R.id.title_new_order_count_ll);
-            this.title_order_count_ll = (LinearLayout) rootView.findViewById(R.id.title_order_count_ll);
+
+            this.order_complete_count_ll = (LinearLayout) rootView.findViewById(R.id.order_complete_count_ll);
+            this.order_complete_price_ll = (LinearLayout) rootView.findViewById(R.id.order_complete_price_ll);
+
         }
 
 
         public void init() {
-            this.title_new_customer_count_ll.setOnClickListener(AgentGroupReportAchievementFragment.this);
-            this.title_total_agent_count_ll.setOnClickListener(AgentGroupReportAchievementFragment.this);
-            this.title_reg_customer_count_ll.setOnClickListener(AgentGroupReportAchievementFragment.this);
-            this.title_new_order_count_ll.setOnClickListener(AgentGroupReportAchievementFragment.this);
-            this.title_order_count_ll.setOnClickListener(AgentGroupReportAchievementFragment.this);
+            this.order_complete_count_ll.setOnClickListener(AgentGroupReportOrderFragment.this);
+            this.order_complete_price_ll.setOnClickListener(AgentGroupReportOrderFragment.this);
         }
 
 
         public void reset() {
-            title_new_customer_count_ll.setEnabled(true);
-            title_total_agent_count_ll.setEnabled(true);
-            title_reg_customer_count_ll.setEnabled(true);
-            title_new_order_count_ll.setEnabled(true);
-            title_order_count_ll.setEnabled(true);
+            order_complete_count_ll.setEnabled(true);
+            order_complete_price_ll.setEnabled(true);
 
+            this.order_complete_count_icon.setVisibility(View.GONE);
+            this.order_complete_count_ll.setTag(true);
 
-            this.title_new_customer_count_icon.setVisibility(View.GONE);
-            this.title_new_customer_count_ll.setTag(true);
-
-            this.title_total_agent_count_icon.setVisibility(View.GONE);
-            this.title_total_agent_count_ll.setTag(true);
-
-            this.title_reg_customer_count_icon.setVisibility(View.GONE);
-            this.title_reg_customer_count_ll.setTag(true);
-
-
-            this.title_new_order_count_icon.setVisibility(View.GONE);
-            this.title_new_order_count_ll.setTag(true);
-
-            this.title_order_count_icon.setVisibility(View.GONE);
-            this.title_order_count_ll.setTag(true);
+            this.order_complete_price_icon.setVisibility(View.GONE);
+            this.order_complete_price_ll.setTag(true);
         }
-
 
         public void resetOnSeach() {
-            title_new_customer_count_ll.setEnabled(false);
-            title_total_agent_count_ll.setEnabled(false);
-            title_reg_customer_count_ll.setEnabled(false);
-            title_new_order_count_ll.setEnabled(false);
-            title_order_count_ll.setEnabled(false);
+            this.order_complete_count_icon.setVisibility(View.GONE);
+            this.order_complete_price_icon.setVisibility(View.GONE);
 
-            this.title_new_customer_count_icon.setVisibility(View.GONE);
-            this.title_total_agent_count_icon.setVisibility(View.GONE);
-            this.title_reg_customer_count_icon.setVisibility(View.GONE);
-            this.title_new_order_count_icon.setVisibility(View.GONE);
-            this.title_order_count_icon.setVisibility(View.GONE);
+            order_complete_count_ll.setEnabled(false);
+            order_complete_price_ll.setEnabled(false);
         }
+
     }
 
     @Override
@@ -438,4 +388,6 @@ public class AgentGroupReportAchievementFragment extends BaseFragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+
 }

@@ -29,7 +29,7 @@ public class DataCenterQuestionActivity extends BaseActivity {
 
     @Override
     public void OnActCreate(Bundle savedInstanceState) {
-        setTitle("数据中心");
+        setTitle("数据说明");
         UnSwipeViewPager viewPager = (UnSwipeViewPager) findViewById(R.id.viewPager);
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager.setScanScroll(true);

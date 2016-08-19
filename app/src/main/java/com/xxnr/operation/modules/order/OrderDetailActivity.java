@@ -719,7 +719,7 @@ public class OrderDetailActivity extends BaseActivity {
                     }
                 }
                 //附加选项的总价
-                float car_additions_price = 0;
+                double car_additions_price = 0;
                 List<OrderDetailResult.DatasBean.SKUsBean.Additions> additions = SKUsList.get(position).additions;
                 if (additions != null && !additions.isEmpty()) {
                     for (int k = 0; k < additions.size(); k++) {

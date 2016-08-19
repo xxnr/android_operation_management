@@ -44,7 +44,14 @@ public class AgentReportTotalResult extends ResponseResult{
         public int newOrderCount;
         public int newOrderCompletedCount;
         public int sequenceNo;
+
+        public int completedOrderCount;
+        public double completedOrderPaidAmount;
+
         public String name;
         public String phone;
+
+
+
     }
 }

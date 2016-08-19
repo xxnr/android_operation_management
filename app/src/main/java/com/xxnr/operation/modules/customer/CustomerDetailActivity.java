@@ -276,7 +276,6 @@ public class CustomerDetailActivity extends BaseActivity {
                     rsc_info_ll.setVisibility(View.VISIBLE);
                     is_fill_county_type.setText("");
 
-                    rsc_name.setText(infoResult.RSCInfo.name);
                     rsc_card_id.setText(infoResult.RSCInfo.IDNo);
                     rsc_company_name.setText(infoResult.RSCInfo.companyName);
                     rsc_name.setText(infoResult.RSCInfo.name);

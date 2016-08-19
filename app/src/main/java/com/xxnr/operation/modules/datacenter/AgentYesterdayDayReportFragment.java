@@ -38,6 +38,7 @@ public class AgentYesterdayDayReportFragment extends BaseFragment implements Pul
     private PullToRefreshScrollView refreshScrollView;
     private TitleViewHolder titleViewHolder;
     private String SORT = "";
+    private int SORTORDER;
 
     private AgentAdapter adapter;
     private NameAgentAdapter nameAdapter;
@@ -55,7 +56,7 @@ public class AgentYesterdayDayReportFragment extends BaseFragment implements Pul
                 sortOrder(v, SORT);
                 break;
             case R.id.title_total_agent_count_ll:
-                SORT = "NEWANGENT";
+                SORT = "NEWAGENT";
                 sortOrder(v, SORT);
                 break;
             case R.id.title_reg_customer_count_ll:
@@ -87,7 +88,8 @@ public class AgentYesterdayDayReportFragment extends BaseFragment implements Pul
             showProgressDialog();
             if ((v.getTag()) != null && (Boolean) v.getTag()) {
                 titleViewHolder.reset();
-                getData(sort, -1);
+                SORTORDER=-1;
+                getData(sort);
                 v.setTag(false);
                 try {
                     ((LinearLayout) v).getChildAt(1).setBackgroundResource(R.mipmap.sort_down);
@@ -97,7 +99,8 @@ public class AgentYesterdayDayReportFragment extends BaseFragment implements Pul
                 }
             } else {
                 titleViewHolder.reset();
-                getData(sort, 1);
+                SORTORDER=1;
+                getData(sort);
                 v.setTag(true);
                 try {
                     ((LinearLayout) v).getChildAt(1).setBackgroundResource(R.mipmap.sort_up);
@@ -142,18 +145,19 @@ public class AgentYesterdayDayReportFragment extends BaseFragment implements Pul
 
         showProgressDialog();
         SORT = "NEWINVITEE";
-        getData(SORT, -1);
+        SORTORDER=-1;
+        getData(SORT);
         return view;
     }
 
 
-    private void getData(String sort, int sortOrder) {
+    private void getData(String sort) {
         RequestParams params = new RequestParams();
         params.put("token", App.getApp().getToken());
         params.put("max", 20);
-        if (sortOrder != 0) {
+        if (SORTORDER != 0) {
             params.put("sort", sort);
-            params.put("sortOrder", sortOrder);
+            params.put("sortOrder", SORTORDER);
         }
         params.put("page", page);
         execApi(ApiType.GET_AGENT_RANK.setMethod(ApiType.RequestMethod.GET), params);
@@ -228,7 +232,7 @@ public class AgentYesterdayDayReportFragment extends BaseFragment implements Pul
     @Override
     public void onRefresh(PullToRefreshBase refreshView) {
         page++;
-        getData(SORT, -1);
+        getData(SORT);
     }
 
     class AgentAdapter extends CommonAdapter<AgentReportResult.AgentReportYesterdayBean> {
@@ -253,7 +257,7 @@ public class AgentYesterdayDayReportFragment extends BaseFragment implements Pul
                 holder.setText(R.id.reg_customer_count, agentReportYesterdayBean.newPotentialCustomerCount + "");//昨日登记客户
                 holder.setText(R.id.total_reg_customer_count, agentReportYesterdayBean.totalPotentialCustomerCount + "");//总登记客户
                 holder.setText(R.id.order_count, agentReportYesterdayBean.totalCompletedOrderCount + "");
-                holder.setText(R.id.price_amount, StringUtil.toTwoString(agentReportYesterdayBean.totalPaidAmount + ""));
+                holder.setText(R.id.price_amount, StringUtil.toTwoString(agentReportYesterdayBean.totalCompletedOrderPaidAmount + ""));
             }
         }
     }

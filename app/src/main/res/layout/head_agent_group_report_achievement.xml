@@ -113,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxEms="3"
-                android:text="完成订单数"
+                android:text="新订单完成数"
                 android:textSize="14sp" />
 
             <ImageView

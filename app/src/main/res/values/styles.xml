@@ -90,5 +90,10 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">14sp</item>
     </style>
+    <!--popwindow动画-->
+    <style name="AnimTop2" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/push_top_in2</item>
+        <item name="android:windowExitAnimation">@anim/push_top_out2</item>
+    </style>
 
 </resources>
